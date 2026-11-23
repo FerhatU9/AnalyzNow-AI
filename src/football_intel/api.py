@@ -14,7 +14,7 @@ from pydantic import BaseModel, Field
 from .data import load_matches
 from .model import train, forecast
 
-app = FastAPI(title="AnalysNow AI", version="0.2.0")
+app = FastAPI(title="AnalyzNow AI", version="0.2.0")
 
 
 class ForecastRequest(BaseModel):
