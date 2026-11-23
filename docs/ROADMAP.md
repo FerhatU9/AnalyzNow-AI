@@ -7,11 +7,11 @@ This roadmap distinguishes **locally verified work** from work still under devel
 | Environment and tooling | Python, Node.js, Docker, VS Code and Git configured locally | Setup reproducible from a clean checkout |
 | Historical data ingestion | Four completed EPL seasons downloaded and imported; 1,520 results stored | Source provenance review and independent score sampling |
 | Forecasting baseline | Weighted independent-Poisson model working; walk-forward evaluation on 760 fixtures | Calibration analysis, stronger baselines and leakage review |
-| PostgreSQL integration | Renamed local PostgreSQL database restored from backup with 1,520 matches confirmed | Re-run database-dependent tests and verify FastAPI and frontend against the migrated database |
+| PostgreSQL integration | Renamed local PostgreSQL database restored with 1,520 matches; 2 integration tests passed | Verify runtime endpoint and improve error handling |
 | API and dashboard | FastAPI and React/Next.js historical forecasts demonstrated | Team dropdowns, data validation, frontend tests and accessible UX |
-| Market data | Live EPL odds retrieval and `/v1/market-odds` endpoint; 35 standard tests passed | Store timestamped odds and build dashboard display |
+| Market data | Live EPL odds retrieval and `/v1/market-odds` endpoint; new on-demand dashboard view on a feature branch | Verify local end-to-end behavior, store timestamped odds and test provider failure responses |
 | Model-versus-market comparison | Not implemented | Exact fixture matching and point-in-time data alignment |
-| GitHub and CI | Private repository, with Python and frontend CI jobs passing on the branding branch | Confirm safe database migration, review secrets and keep documentation current |
+| GitHub and CI | Private repository; branded main branch merged and Python/frontend CI checks passed | Review secrets, reproducible setup and documentation at each milestone |
 | Verified news and RAG | Not implemented | Source licensing, fact verification and retrieval benchmark |
 | AI match analysis | Not implemented | Grounded summaries with audited citations and fixed model probabilities |
 | Deployment and operations | Not implemented | Authentication, security, monitoring, backups and licensing review |
@@ -23,7 +23,7 @@ Every completed milestone is accompanied by documentation changes in the same pu
 ## Immediate development priorities
 
 1. Maintain clean, current documentation and reviewed Git commits.
-2. Add the bookmaker-odds endpoint to the Next.js dashboard without mixing incompatible prediction dates.
+2. Verify the Next.js bookmaker-odds dashboard with the local provider and backend, including no-data and error behavior.
 3. Replace free-text team names with a validated list from PostgreSQL.
 4. Record bookmaker source, event ID, timestamps and odds snapshots; ensure no stale or mismatched data drives comparisons.
 5. Update current match results and evaluate statistical-only, market-only and combined estimates on point-in-time historical snapshots.

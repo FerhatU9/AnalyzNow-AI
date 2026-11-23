@@ -21,12 +21,14 @@ Open http://127.0.0.1:3011.
 
 - `src/app/page.tsx` — interactive forecasting page.
 - `src/app/api/forecast/route.ts` — server-side proxy for `POST /v1/forecast`.
+- `src/app/api/market-odds/route.ts` — server-side proxy for `GET /v1/market-odds`.
+- `src/components/market-odds.tsx` — on-demand live bookmaker summaries.
 - `src/app/globals.css` — application styling.
 - `src/app/layout.tsx` — shared page layout.
 
 ## Current scope
 
-The interface provides home/away team inputs, a historical cutoff date, expected goals, match-outcome probability bars and likely scorelines. The bookmaker-odds endpoint is available from FastAPI, but has **not yet been added to this dashboard**.
+The interface provides home/away team inputs, a historical cutoff date, expected goals, match-outcome probability bars and likely scorelines. The Live Market Intelligence section fetches bookmaker odds only when the user requests them. It shows kickoff times, last-available odds timestamps, bookmaker counts and 1X2 market-implied probabilities. It is separate from the historical forecasting panel and does not combine historical model predictions with current odds. The frontend addition remains subject to local end-to-end verification.
 
 Team names must match the names in the database. The interface is intended for **local development**; public deployment, authentication, accessibility audits and end-to-end browser tests are future work.
 
