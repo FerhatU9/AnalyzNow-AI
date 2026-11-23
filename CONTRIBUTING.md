@@ -18,7 +18,7 @@ This repository represents a working software product under development. Make ch
 4. Run the relevant local checks and review the staged diff for credentials or unintended files.
 5. Open a pull request with a factual summary, validation evidence and known limitations.
 6. Verify GitHub Actions; merge only after the required compatibility or migration checks.
-7. Use concise, change-specific commit messages, for example `AnalyzNow AI: Add fixture matching tests`. Do not make empty commits simply to increase contribution counts.
+7. Use concise, change-specific commit messages, for example `Add fixture matching tests` or `Document database recovery`. The repository already identifies the product; avoid repeating its name in every commit. Do not make empty commits simply to increase contribution counts.
 
 ### Local checks
 
