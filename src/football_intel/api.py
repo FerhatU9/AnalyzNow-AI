@@ -38,7 +38,8 @@ def _dataset_label() -> str:
         return "Configured PostgreSQL match results"
     if source == "csv":
         path = os.getenv("FOOTBALL_CSV_PATH", "")
-        if Path(path).name == "synthetic_demo.csv":
+        demo_file = Path(__file__).resolve().parents[2] / "data" / "synthetic_demo.csv"
+        if path and Path(path).resolve() == demo_file.resolve():
             return "Synthetic demonstration data"
         return "Configured CSV match results"
     return "Unknown data source"
