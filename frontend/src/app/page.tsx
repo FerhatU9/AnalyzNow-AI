@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 
 type Forecast = {
   home_team: string;
@@ -23,12 +23,53 @@ type Forecast = {
     probability: number;
   }[];
   notice?: string;
+  dataset_label?: string;
 };
+
+type TeamCatalog = { teams: string[]; dataset_label: string; last_match_date: string };
 
 export default function Home() {
   const [homeTeam, setHomeTeam] = useState("Arsenal FC");
   const [awayTeam, setAwayTeam] = useState("Chelsea FC");
   const [date, setDate] = useState("2025-07-01");
+  const [catalog, setCatalog] = useState<TeamCatalog | null>(null);
+  const [catalogError, setCatalogError] = useState("");
+  const [catalogLoading, setCatalogLoading] = useState(true);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    async function loadTeams() {
+      try {
+        const response = await fetch("/api/teams", {
+          cache: "no-store",
+          signal: controller.signal,
+        });
+        if (!response.ok) throw new Error("Team list unavailable");
+        const body: unknown = await response.json();
+        if (
+          typeof body !== "object" || body === null ||
+          !("teams" in body) || !Array.isArray(body.teams) ||
+          !body.teams.every((item) => typeof item === "string") ||
+          body.teams.length < 2 ||
+          !("dataset_label" in body) || typeof body.dataset_label !== "string" ||
+          !("last_match_date" in body) || typeof body.last_match_date !== "string"
+        ) throw new Error("Invalid team catalog");
+
+        if (controller.signal.aborted) return;
+        const next = body as TeamCatalog;
+        setCatalog(next);
+        setHomeTeam(next.teams[0]);
+        setAwayTeam(next.teams[1]);
+        if (next.dataset_label === "Synthetic demonstration data") setDate("2025-07-19");
+      } catch {
+        if (!controller.signal.aborted) setCatalogError("Cannot load teams. Check the backend.");
+      } finally {
+        if (!controller.signal.aborted) setCatalogLoading(false);
+      }
+    }
+    void loadTeams();
+    return () => controller.abort();
+  }, []);
 
   const [forecast, setForecast] = useState<Forecast | null>(null);
   const [loading, setLoading] = useState(false);
@@ -36,6 +77,11 @@ export default function Home() {
 
   async function generateForecast(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+
+    if (!catalog || homeTeam === awayTeam) {
+      setError("Select two different teams from the configured dataset.");
+      return;
+    }
 
     setLoading(true);
     setError("");
@@ -105,25 +151,47 @@ export default function Home() {
           </h2>
 
           <form onSubmit={generateForecast} className="space-y-5">
+            {catalog && (
+              <p className="rounded-lg border border-emerald-800 bg-emerald-950 px-4 py-3 text-sm text-emerald-100">
+                Data: {catalog.dataset_label}. Latest recorded match: {catalog.last_match_date}.
+                {catalog.dataset_label === "Synthetic demonstration data" &&
+                  " Fictional teams and scores — not real match predictions."}
+              </p>
+            )}
+            {catalogError && (
+              <p role="alert" className="rounded-lg bg-red-950 p-4 text-sm text-red-200">
+                {catalogError}
+              </p>
+            )}
             <div className="grid gap-4 sm:grid-cols-2">
               <label className="space-y-2">
                 <span>Home Team</span>
-                <input
+                <select
                   className="w-full rounded-lg border border-slate-700 bg-slate-800 p-3"
                   value={homeTeam}
                   onChange={(e) => setHomeTeam(e.target.value)}
+                  disabled={!catalog || catalogLoading}
                   required
-                />
+                >
+                  {catalog?.teams.map((team) => (
+                    <option key={team} value={team}>{team}</option>
+                  ))}
+                </select>
               </label>
 
               <label className="space-y-2">
                 <span>Away Team</span>
-                <input
+                <select
                   className="w-full rounded-lg border border-slate-700 bg-slate-800 p-3"
                   value={awayTeam}
                   onChange={(e) => setAwayTeam(e.target.value)}
+                  disabled={!catalog || catalogLoading}
                   required
-                />
+                >
+                  {catalog?.teams.map((team) => (
+                    <option key={team} value={team}>{team}</option>
+                  ))}
+                </select>
               </label>
             </div>
 
@@ -140,7 +208,7 @@ export default function Home() {
 
             <button
               type="submit"
-              disabled={loading}
+              disabled={loading || !catalog || homeTeam === awayTeam}
               className="w-full rounded-lg bg-emerald-500 p-3 font-semibold text-slate-950 hover:bg-emerald-400 disabled:opacity-50"
             >
               {loading ? "Calculating..." : "Generate Forecast"}
@@ -148,8 +216,8 @@ export default function Home() {
           </form>
 
           <p className="mt-4 text-xs text-slate-400">
-            Historical dataset: Premier League, 2021–2025.
-            Enter club names exactly as stored in the database.
+            Team selection uses your configured dataset. Historical matches are
+            not evidence of current team form.
           </p>
         </section>
 
@@ -166,6 +234,9 @@ export default function Home() {
               <p className="text-sm text-slate-400">
                 Model forecast as of {forecast.as_of}
               </p>
+              {forecast.dataset_label && (
+                <p className="mt-2 text-sm text-emerald-300">{forecast.dataset_label}</p>
+              )}
               <h2 className="mt-2 text-2xl font-bold">
                 {forecast.home_team} vs {forecast.away_team}
               </h2>

@@ -15,7 +15,7 @@ AnalyzNow AI is a football research application that turns historical match resu
 | Independent-Poisson forecasting model | Implemented; expected goals, match outcome and goal-market probabilities |
 | Walk-forward historical evaluation | Implemented; evaluated on 760 Premier League fixtures from 2023/24–2024/25 |
 | FastAPI forecasting endpoint | Implemented and exercised with PostgreSQL data |
-| Next.js interactive forecasting dashboard | Implemented and exercised locally |
+| Next.js interactive forecasting dashboard | Implemented locally; branch adds dataset-aware team selectors pending review |
 | Current bookmaker odds retrieval and margin normalization | Implemented; API endpoint and calculation tests passing |
 | Integrated model-versus-market dashboard | Planned; current odds are not yet matched to current-model forecasts |
 | Verified team news, RAG, LangGraph match analysis | Planned |
@@ -33,6 +33,10 @@ The current Poisson model uses **historical final scores**, not a full expected-
 
 Refer to [System Architecture](docs/ARCHITECTURE.md), [Development Roadmap](docs/ROADMAP.md), [Technical Research](docs/RESEARCH.md) and [Contribution Standards](CONTRIBUTING.md). Documentation is reviewed alongside each verified feature milestone; roadmap status is not changed until tests and evidence support it.
 
+## Quick local demonstration
+
+For a no-credentials walkthrough using **fictional match data**, see [Reproducible Local Demo](docs/DEMO.md). It uses the included synthetic CSV and does **not** reproduce real-match evaluation or live bookmaker odds. The team selector and source-label changes passed automated CI; manual clean-checkout browser verification remains pending. See the [Public Release Checklist](docs/PUBLIC_RELEASE_CHECKLIST.md).
+
 ## Local development (Windows)
 
 ### Requirements
@@ -47,7 +51,7 @@ py -3 -m venv .venv
 .\.venv\Scripts\python.exe -m pytest -q
 ```
 
-The project has passed **35 standard automated tests** on the developer's Windows machine. PostgreSQL-dependent integration checks have been run separately; CI status must be verified independently.
+GitHub Actions passed **39 Python tests** and the frontend lint and production build on the reproducible-demo branch. Separately, the developer previously verified **2 PostgreSQL integration tests** with the restored local 1,520-match database. These results do not establish current-match predictive accuracy or deployment security.
 
 ### 2. Local configuration and PostgreSQL
 
@@ -56,8 +60,8 @@ The project has passed **35 standard automated tests** on the developer's Window
 If `.env` does not already exist, copy `.env.example` to `.env` and replace the password placeholder with your own local development password. **Existing local installations:** the PostgreSQL account and Compose project must be migrated before switching to the new database identifiers. Follow [Database Migration](docs/DATABASE_MIGRATION.md) rather than replacing a working `.env` or deleting a volume.
 
 ```powershell
-Copy-Item .env.example .env
-# Edit POSTGRES_PASSWORD in .env before starting the database.
+if (-not (Test-Path .env)) { Copy-Item .env.example .env }
+# Edit POSTGRES_PASSWORD in .env before starting a NEW database.
 docker compose up -d
 docker compose ps
 ```
@@ -128,7 +132,7 @@ npm.cmd run lint
 npm.cmd run dev -- --hostname 127.0.0.1 --port 3011
 ```
 
-Open [AnalyzNow AI dashboard](http://127.0.0.1:3011). Keep the PostgreSQL container and FastAPI terminal running while using the frontend.
+Open [AnalyzNow AI dashboard](http://127.0.0.1:3011). The team selector reflects the configured data source. Keep the PostgreSQL container and FastAPI terminal running when using the historical database, or follow the synthetic demo guide instead.
 
 ## API overview
 
@@ -136,6 +140,7 @@ Open [AnalyzNow AI dashboard](http://127.0.0.1:3011). Keep the PostgreSQL contai
 | --- | --- | --- |
 | `GET` | `/health` | Basic development server status (not a database readiness check) |
 | `POST` | `/v1/forecast` | Generate a statistical forecast for teams and cutoff date |
+| `GET` | `/v1/teams` | List teams and the configured dataset label for the dashboard |
 | `GET` | `/v1/market-odds` | Retrieve current EPL bookmaker-implied market probabilities |
 
 Market odds access requires `ODDS_API_KEY` in the local `.env`. Run `python -m football_intel.market_odds` to inspect the provider response; this consumes provider API quota. The current dashboard displays statistical forecasts; the live market section is still being developed.
