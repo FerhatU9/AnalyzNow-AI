@@ -7,6 +7,7 @@ The goal of this checklist is a credible **public source-code portfolio**, not a
 - [x] Product naming, dependency manifests and source tree are consistently organized in the active repository.
 - [x] GitHub Actions passed **39 Python tests** on the demo feature branch.
 - [x] GitHub Actions passed Next.js lint and production build on the demo feature branch.
+- [x] GitHub Actions full-stack smoke test passed on a fresh Ubuntu runner: installs Python/npm dependencies, builds Next.js, starts FastAPI and Next.js locally, verifies team catalog consistency, sends a synthetic forecast through the API and frontend proxy, and checks probability totals and provenance labels. This does **not** independently verify rendered browser interactions.
 - [x] The developer separately restored **1,520 historical matches** to the renamed local PostgreSQL database and passed **2 PostgreSQL integration tests**.
 - [x] A no-provider-key, no-database demonstration is implemented using an explicitly labeled synthetic data file.
 - [x] Synthetic team selection and API failures are covered by automated tests.
@@ -15,7 +16,7 @@ The goal of this checklist is a credible **public source-code portfolio**, not a
 
 ## Required before public visibility
 
-- [ ] Independently run the instructions in [Reproducible Local Demo](DEMO.md) from a fresh checkout. Verify that team selectors load, two fictional clubs can be selected, and a forecast is displayed with the correct synthetic-data warning.
+- [ ] Independently run the documented browser walkthrough from a fresh checkout. The full-stack HTTP workflow has passed CI on a clean runner, but manual browser interaction on a separate environment has not yet been verified.
 - [ ] Verify the existing market dashboard feature separately against the real backend. Test successful data, empty fixtures, missing API key and provider failure without publishing licensed bookmaker data.
 - [ ] Review current branches **and reachable Git history** for API keys, PostgreSQL passwords, environment files, private outputs and unlicensed datasets. Git ignore rules alone do not remove earlier commits.
 - [ ] Perform an explicit dependency security review for Python and npm; investigate actionable issues and record what was checked.
@@ -37,4 +38,4 @@ The goal of this checklist is a credible **public source-code portfolio**, not a
 
 **Current decision: private; public portfolio approval pending the unchecked gates above.**
 
-The active demo branch improves accessibility for a reviewer, but passing automated tests alone does not establish a usable clean-checkout demo or a completed security and data-rights review.
+The active demo branch improves accessibility for a reviewer, and has passed a clean-runner HTTP integration smoke test. An independent browser walkthrough and the security and data-rights reviews remain outstanding.
