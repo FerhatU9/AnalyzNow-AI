@@ -41,46 +41,95 @@ def remove_margin(decimal_odds: dict) -> dict:
     }
 
 
+def _parse_utc(value: object) -> datetime | None:
+    """Parse a timezone-aware provider timestamp, without guessing its zone."""
+    if not isinstance(value, str):
+        return None
+    try:
+        parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except ValueError:
+        return None
+    if parsed.tzinfo is None:
+        return None
+    return parsed.astimezone(timezone.utc)
+
+
 def analyze_event(event: dict) -> dict | None:
     """Calculate the market consensus for one fixture."""
 
-    home = event["home_team"]
-    away = event["away_team"]
+    if not isinstance(event, dict):
+        return None
+
+    event_id = event.get("id")
+    home = event.get("home_team")
+    away = event.get("away_team")
+    kickoff = _parse_utc(event.get("commence_time"))
+
+    if not (
+        isinstance(event_id, str) and event_id.strip()
+        and isinstance(home, str) and home.strip()
+        and isinstance(away, str) and away.strip()
+        and home != away and kickoff is not None
+    ):
+        return None
+
+    bookmakers = event.get("bookmakers")
+    if not isinstance(bookmakers, list):
+        return None
 
     estimates = []
     updates = []
+    seen_bookmakers = set()
 
-    for bookmaker in event.get("bookmakers", []):
-        for market in bookmaker.get("markets", []):
-            if market.get("key") != "h2h":
+    for bookmaker in bookmakers:
+        if not isinstance(bookmaker, dict):
+            continue
+
+        bookmaker_id = bookmaker.get("key") or bookmaker.get("title")
+        if not isinstance(bookmaker_id, str) or not bookmaker_id.strip():
+            continue
+        if bookmaker_id in seen_bookmakers:
+            continue
+
+        markets = bookmaker.get("markets")
+        if not isinstance(markets, list):
+            continue
+
+        for market in markets:
+            if not isinstance(market, dict) or market.get("key") != "h2h":
+                continue
+            outcomes = market.get("outcomes")
+            if not isinstance(outcomes, list):
                 continue
 
             prices = {}
-
-            for outcome in market.get("outcomes", []):
-                name = outcome["name"]
+            for outcome in outcomes:
+                if not isinstance(outcome, dict):
+                    continue
+                name = outcome.get("name")
+                if not isinstance(name, str):
+                    continue
 
                 if name == home:
-                    prices["home_win"] = outcome["price"]
+                    prices["home_win"] = outcome.get("price")
                 elif name == away:
-                    prices["away_win"] = outcome["price"]
+                    prices["away_win"] = outcome.get("price")
                 elif name.casefold() == "draw":
-                    prices["draw"] = outcome["price"]
+                    prices["draw"] = outcome.get("price")
 
             if len(prices) == 3:
                 try:
-                    estimates.append(remove_margin(prices))
+                    estimate = remove_margin(prices)
                 except (ValueError, TypeError, OverflowError):
                     continue
 
-                updated = (
-                    market.get("last_update")
-                    or bookmaker.get("last_update")
+                seen_bookmakers.add(bookmaker_id)
+                estimates.append(estimate)
+                updated = _parse_utc(
+                    market.get("last_update") or bookmaker.get("last_update")
                 )
-
-                if updated:
+                if updated is not None:
                     updates.append(updated)
-
                 break
 
     if not estimates:
@@ -95,12 +144,14 @@ def analyze_event(event: dict) -> dict | None:
     }
 
     return {
-        "event_id": event["id"],
+        "event_id": event_id,
         "home_team": home,
         "away_team": away,
         "kickoff": event["commence_time"],
         "bookmakers_compared": len(estimates),
-        "latest_odds_update": max(updates) if updates else None,
+        "latest_odds_update": (
+            max(updates).isoformat().replace("+00:00", "Z") if updates else None
+        ),
         "market_probabilities": probabilities,
     }
 
@@ -135,27 +186,33 @@ def fetch_premier_league_odds() -> list:
         raise RuntimeError(
             "Cannot connect to the odds provider"
         ) from None
+    except (ValueError, UnicodeError):
+        raise RuntimeError("Odds provider returned invalid JSON") from None
 
     if not isinstance(events, list):
-        raise ValueError("Unexpected odds response format")
+        raise RuntimeError("Odds provider returned an unexpected response")
 
     now = datetime.now(timezone.utc)
     results = []
+    seen_events = set()
 
     for event in events:
-        kickoff = datetime.fromisoformat(
-            event["commence_time"].replace("Z", "+00:00")
-        )
-
-        if kickoff <= now:
+        analysis = analyze_event(event)
+        if analysis is None:
             continue
 
-        analysis = analyze_event(event)
+        kickoff = _parse_utc(analysis["kickoff"])
+        if kickoff is None or kickoff <= now:
+            continue
 
-        if analysis:
-            results.append(analysis)
+        event_id = analysis["event_id"]
+        if event_id in seen_events:
+            continue
 
-    return results
+        seen_events.add(event_id)
+        results.append(analysis)
+
+    return sorted(results, key=lambda fixture: fixture["kickoff"])
 
 
 if __name__ == "__main__":
