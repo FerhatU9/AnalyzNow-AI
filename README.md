@@ -15,7 +15,7 @@ AnalyzNow AI is a football research application that turns historical match resu
 | Independent-Poisson forecasting model | Implemented; expected goals, match outcome and goal-market probabilities |
 | Walk-forward historical evaluation | Implemented; evaluated on 760 Premier League fixtures from 2023/24–2024/25 |
 | FastAPI forecasting endpoint | Implemented and exercised with PostgreSQL data |
-| Next.js interactive forecasting dashboard | Implemented locally; branch adds dataset-aware team selectors pending review |
+| Next.js interactive forecasting dashboard | Verified local browser demonstration with dataset-aware selectors; also passed clean-runner HTTP smoke test |
 | Current bookmaker odds retrieval and margin normalization | Implemented; API endpoint and calculation tests passing |
 | Integrated model-versus-market dashboard | Planned; current odds are not yet matched to current-model forecasts |
 | Verified team news, RAG, LangGraph match analysis | Planned |
@@ -143,7 +143,7 @@ Open [AnalyzNow AI dashboard](http://127.0.0.1:3011). The team selector reflects
 | `GET` | `/v1/teams` | List teams and the configured dataset label for the dashboard |
 | `GET` | `/v1/market-odds` | Retrieve current EPL bookmaker-implied market probabilities |
 
-Market odds access requires `ODDS_API_KEY` in the local `.env`. Run `python -m football_intel.market_odds` to inspect the provider response; this consumes provider API quota. The current dashboard displays statistical forecasts; the live market section is still being developed.
+Market odds access requires `ODDS_API_KEY` in the local `.env`. Run `python -m football_intel.market_odds` to inspect the provider response; this consumes provider API quota. The separate on-demand bookmaker dashboard is included on the market integration branch; end-to-end live-provider verification remains pending.
 
 ## Testing and evaluation
 
@@ -188,7 +188,7 @@ AnalyzNow-AI/
 
 ## Project direction
 
-Planned work includes dynamic club selection, a market-data dashboard, time-matched statistical-versus-market comparisons, improved forecast evaluation, verified news, retrieval-augmented analysis, automated monitoring, and secure deployment. Each feature will be considered complete only when its tests and results can be independently checked. See the [Development Roadmap](docs/ROADMAP.md).
+Planned work includes market-data validation and time-matched statistical-versus-market comparisons, improved forecast evaluation, verified news, retrieval-augmented analysis, automated monitoring, and secure deployment. Each feature will be considered complete only when its tests and results can be independently checked. See the [Development Roadmap](docs/ROADMAP.md).
 
 ## License
 

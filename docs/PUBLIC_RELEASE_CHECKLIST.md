@@ -12,6 +12,7 @@ The goal of this checklist is a credible **public source-code portfolio**, not a
 - [x] A no-provider-key, no-database demonstration is implemented using an explicitly labeled synthetic data file.
 - [x] Synthetic team selection and API failures are covered by automated tests.
 - [x] Documentation distinguishes historical statistical forecasts, fictional demo results and live market probabilities.
+- [x] On-demand market dashboard UI and server-side proxy are prepared on a separate integration branch. Live-provider browser verification is still outstanding.
 - [x] Developer-local browser test on 2026-11-23: the team catalog loaded, Demo City vs Demo East forecast rendered with cutoff 2025-07-19, expected goals 1.60/1.00 and outcome probabilities 51.3%/25.0%/23.7%. The synthetic-data label was visible. This verifies the tested local environment, **not** a fresh checkout.
 
 ## Required before public visibility

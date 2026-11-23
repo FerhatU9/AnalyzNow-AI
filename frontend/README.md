@@ -22,12 +22,14 @@ Open http://127.0.0.1:3011.
 - `src/app/page.tsx` — interactive forecasting page.
 - `src/app/api/forecast/route.ts` — server-side proxy for `POST /v1/forecast`.
 - `src/app/api/teams/route.ts` — server-side team catalog and dataset metadata proxy.
+- `src/app/api/market-odds/route.ts` — on-demand bookmaker market proxy.
+- `src/components/market-odds.tsx` — bookmaker market display with timestamps, empty results, and errors.
 - `src/app/globals.css` — application styling.
 - `src/app/layout.tsx` — shared page layout.
 
 ## Current scope
 
-The interface provides dataset-aware home/away team selectors, a historical cutoff date, expected goals, match-outcome probability bars and likely scorelines. If the team API is unavailable, forecast controls remain disabled and a connection error is displayed. The bookmaker-odds endpoint is available from FastAPI, but has **not yet been added to this dashboard**.
+The interface provides dataset-aware home/away team selectors, a historical cutoff date, expected goals, match-outcome probability bars and likely scorelines. If the team API is unavailable, forecast controls remain disabled and a connection error is displayed. The separate Live Market Intelligence panel is included on the integration branch. It loads bookmaker prices only when requested, and its market probabilities must not be mistaken for model forecasts. Successful live-provider browser verification remains pending.
 
 The available teams come from the configured backend data source. For the fictional local demonstration, see [Reproducible Demo](../docs/DEMO.md). The interface is intended for **local development**; public deployment, authentication, accessibility audits and end-to-end browser tests are future work.
 

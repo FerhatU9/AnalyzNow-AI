@@ -9,7 +9,7 @@ This roadmap distinguishes **locally verified work** from work still under devel
 | Forecasting baseline | Weighted independent-Poisson model working; walk-forward evaluation on 760 fixtures | Calibration analysis, stronger baselines and leakage review |
 | PostgreSQL integration | Renamed local PostgreSQL database restored from backup with 1,520 matches confirmed | Re-run database-dependent tests and verify FastAPI and frontend against the migrated database |
 | API and dashboard | Historical forecasting and dataset-aware synthetic demo verified locally in browser (39 CI Python tests and frontend build passing); full-stack HTTP smoke test passing on clean GitHub runner; independent fresh browser walkthrough outstanding | Independently verify browser interactions, add frontend tests and accessibility audit |
-| Market data | Live EPL odds retrieval and `/v1/market-odds` endpoint; 35 standard tests passed | Store timestamped odds and build dashboard display |
+| Market data | Live EPL odds retrieval, API endpoint and separate on-demand frontend panel on integration branch; live-provider browser check pending | Verify provider/empty/error behavior, then consider timestamped storage under provider terms |
 | Model-versus-market comparison | Not implemented | Exact fixture matching and point-in-time data alignment |
 | GitHub and CI | Private repository, with Python and frontend CI jobs passing on the branding branch | Confirm safe database migration, review secrets and keep documentation current |
 | Verified news and RAG | Not implemented | Source licensing, fact verification and retrieval benchmark |
@@ -23,7 +23,7 @@ Every completed milestone is accompanied by documentation changes in the same pu
 ## Immediate development priorities
 
 1. Maintain clean, current documentation and reviewed Git commits.
-2. Add the bookmaker-odds endpoint to the Next.js dashboard without mixing incompatible prediction dates.
+2. Verify the separate on-demand market dashboard without combining incompatible prediction dates.
 3. Verify dataset-aware team selectors and the no-credentials synthetic demo on a clean checkout.
 4. Record bookmaker source, event ID, timestamps and odds snapshots; ensure no stale or mismatched data drives comparisons.
 5. Update current match results and evaluate statistical-only, market-only and combined estimates on point-in-time historical snapshots.
