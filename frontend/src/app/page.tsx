@@ -236,7 +236,7 @@ export default function Home() {
               </p>
               {forecast.dataset_label && (
                 <p className="mt-2 text-sm text-emerald-300">{forecast.dataset_label}</p>
-              )
+              )}
               <h2 className="mt-2 text-2xl font-bold">
                 {forecast.home_team} vs {forecast.away_team}
               </h2>
