@@ -1,4 +1,4 @@
-# AnalysNow AI — Historical Data Pipeline
+# AnalyzNow AI — Historical Data Pipeline
 
 This document describes the repeatable data flow from permitted OpenFootball result files into the local PostgreSQL database and statistical evaluation.
 
@@ -30,7 +30,7 @@ Inspect `data/openfootball/epl_2021_2025/manifest.json` for retrieval timestamps
 ```powershell
 docker compose up -d
 docker compose cp database/schema.sql postgres:/tmp/schema.sql
-docker compose exec -T postgres psql -U analysnow -d analysnow -v ON_ERROR_STOP=1 -f /tmp/schema.sql
+docker compose exec -T postgres psql -U analyznow -d analyznow -v ON_ERROR_STOP=1 -f /tmp/schema.sql
 ```
 
 ## Import the dataset
@@ -38,13 +38,13 @@ docker compose exec -T postgres psql -U analysnow -d analysnow -v ON_ERROR_STOP=
 ```powershell
 docker compose cp "data\openfootball\epl_2021_2025\processed\epl_2021-22_2022-23_2023-24_2024-25.csv" postgres:/tmp/epl_matches.csv
 docker compose cp database/import_matches.sql postgres:/tmp/import_matches.sql
-docker compose exec -T postgres psql -U analysnow -d analysnow -v ON_ERROR_STOP=1 -f /tmp/import_matches.sql
+docker compose exec -T postgres psql -U analyznow -d analyznow -v ON_ERROR_STOP=1 -f /tmp/import_matches.sql
 ```
 
 Verify the count:
 
 ```powershell
-docker compose exec postgres psql -U analysnow -d analysnow -c "SELECT COUNT(*) AS total_matches FROM matches;"
+docker compose exec postgres psql -U analyznow -d analyznow -c "SELECT COUNT(*) AS total_matches FROM matches;"
 ```
 
 For these four seasons, the developer-local import returned 1,520 records, spanning 26 clubs. The importer uses a transaction and an upsert for matches with the same match date and teams. Score corrections can therefore update existing rows; preserving revision history is future work.

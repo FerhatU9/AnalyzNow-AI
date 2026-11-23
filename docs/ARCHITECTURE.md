@@ -1,4 +1,4 @@
-# AnalysNow AI — System Architecture
+# AnalyzNow AI — System Architecture
 
 ## Implemented local system
 

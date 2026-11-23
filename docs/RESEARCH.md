@@ -1,10 +1,10 @@
-# AnalysNow AI — Technical Research
+# AnalyzNow AI — Technical Research
 
 This document records sources and architectural considerations gathered during project planning. Provider prices, API coverage and legal requirements change; **verify current terms directly before purchase, publication or commercial use**.
 
 ## Product position
 
-AnalysNow AI aims to connect statistically evaluated football forecasts with traceable data and, later, verified team/player news. The intended differentiator is transparent forecasts with reproducible historical records, not unverified claims of prediction accuracy.
+AnalyzNow AI aims to connect statistically evaluated football forecasts with traceable data and, later, verified team/player news. The intended differentiator is transparent forecasts with reproducible historical records, not unverified claims of prediction accuracy.
 
 Relevant products and reference approaches include [Opta Predictions](https://www.statsperform.com/products/opta-predictions/), [Forebet](https://www.forebet.com/en/faq), and source-attributed football analytics tools. Competitive differentiation is a hypothesis, not a proven market gap.
 

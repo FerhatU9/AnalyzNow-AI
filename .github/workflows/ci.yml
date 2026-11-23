@@ -1,4 +1,4 @@
-name: AnalysNow AI CI
+name: AnalyzNow AI CI
 
 on:
   push:

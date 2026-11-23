@@ -1,4 +1,4 @@
-# AnalysNow AI — Data Sources and Provenance
+# AnalyzNow AI — Data Sources and Provenance
 
 ## Included data
 

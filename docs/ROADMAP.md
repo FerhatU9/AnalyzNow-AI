@@ -1,4 +1,4 @@
-# AnalysNow AI — Development Roadmap
+# AnalyzNow AI — Development Roadmap
 
 This roadmap distinguishes **locally verified work** from work still under development. Acceptance requires a repeatable run, passing relevant tests, reviewed changes and an accurate description of limitations.
 

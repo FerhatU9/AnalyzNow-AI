@@ -1,8 +1,8 @@
-# AnalysNow AI
+# AnalyzNow AI
 
 **Football intelligence · Statistical forecasting · Bookmaker market analysis**
 
-AnalysNow AI is a football research application that turns historical match results into probabilistic forecasts and provides a separate view of bookmaker-implied market expectations. The project combines a Python forecasting engine, PostgreSQL, FastAPI and a Next.js dashboard.
+AnalyzNow AI is a football research application that turns historical match results into probabilistic forecasts and provides a separate view of bookmaker-implied market expectations. The project combines a Python forecasting engine, PostgreSQL, FastAPI and a Next.js dashboard.
 
 **Status:** Active development. Local forecasting, database integration, the web dashboard and market-data retrieval have been exercised. The application is **not deployed publicly**, and its forecasts have not been validated for betting or commercial decision-making.
 
@@ -51,7 +51,7 @@ The project has passed **35 standard automated tests** on the developer's Window
 
 ### 2. Local configuration and PostgreSQL
 
-If `.env` does not already exist, copy `.env.example` to `.env` and replace the password placeholder with your own local development password. **Keep an existing `.env` unchanged** if PostgreSQL is already configured.
+If `.env` does not already exist, copy `.env.example` to `.env` and replace the password placeholder with your own local development password. **Existing local installations:** the PostgreSQL account and Compose project must be migrated before switching to the new database identifiers. Follow [Database Migration](docs/DATABASE_MIGRATION.md) rather than replacing a working `.env` or deleting a volume.
 
 ```powershell
 Copy-Item .env.example .env
@@ -68,7 +68,7 @@ For a new database, create its tables:
 
 ```powershell
 docker compose cp database/schema.sql postgres:/tmp/schema.sql
-docker compose exec -T postgres psql -U analysnow -d analysnow -v ON_ERROR_STOP=1 -f /tmp/schema.sql
+docker compose exec -T postgres psql -U analyznow -d analyznow -v ON_ERROR_STOP=1 -f /tmp/schema.sql
 ```
 
 Retrieve completed Premier League results and verify the saved snapshot:
@@ -83,7 +83,7 @@ Import the processed results into PostgreSQL:
 ```powershell
 docker compose cp "data\openfootball\epl_2021_2025\processed\epl_2021-22_2022-23_2023-24_2024-25.csv" postgres:/tmp/epl_matches.csv
 docker compose cp database/import_matches.sql postgres:/tmp/import_matches.sql
-docker compose exec -T postgres psql -U analysnow -d analysnow -v ON_ERROR_STOP=1 -f /tmp/import_matches.sql
+docker compose exec -T postgres psql -U analyznow -d analyznow -v ON_ERROR_STOP=1 -f /tmp/import_matches.sql
 ```
 
 For the specified four seasons, the expected count is **1,520 completed matches**, provided all source seasons are complete. Importing again updates matching fixture scores instead of inserting duplicate fixtures. More detail is available in [Data Pipeline](docs/DATA_PIPELINE.md). Do not repeat imports unnecessarily on an existing working database.
@@ -126,7 +126,7 @@ npm.cmd run lint
 npm.cmd run dev -- --hostname 127.0.0.1 --port 3011
 ```
 
-Open [AnalysNow AI dashboard](http://127.0.0.1:3011). Keep the PostgreSQL container and FastAPI terminal running while using the frontend.
+Open [AnalyzNow AI dashboard](http://127.0.0.1:3011). Keep the PostgreSQL container and FastAPI terminal running while using the frontend.
 
 ## API overview
 
@@ -158,7 +158,7 @@ A developer-local walk-forward evaluation on 760 Premier League matches reported
 ## Repository layout
 
 ```text
-AnalysNow-AI/
+AnalyzNow-AI/
 ├── database/             PostgreSQL schema and match importer
 ├── data/                 Synthetic sample and data provenance guidance
 ├── docs/                 Architecture, roadmap, research, data pipeline
