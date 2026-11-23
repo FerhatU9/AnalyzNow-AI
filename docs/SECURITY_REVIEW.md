@@ -10,13 +10,14 @@ The [Dependency Security workflow](../.github/workflows/security.yml) runs on pu
 
 - `python -m pip_audit .` reviews known vulnerabilities in declared Python project dependencies and the resolved dependency tree.
 - `npm audit --audit-level=high` audits the JavaScript dependency lockfile, including build tooling, and fails when high/critical advisories are reported.
+- `gitleaks git --log-opts="--all" --redact=100` scans reachable Git references for potential committed secrets using the official Gitleaks v8.30.1 container. The checkout fetches full branch history, does not upload a raw findings report, and redacts detected values from logs.
 
 Both use live vulnerability databases, which means results may change without code changes. Record actual GitHub Actions results before marking an audit successful. The audits do not inspect Docker base images, deployed infrastructure, configuration vulnerabilities or unreported flaws.
 
 ## Credential and repository-history review
 
 - [ ] Examine every reachable branch and historical commit for accidental credentials, especially `.env`, `ODDS_API_KEY`, PostgreSQL passwords, cloud tokens, private keys and personal files.
-- [ ] Run an independent history-aware secrets scanner before publication, record its version and results, and investigate any findings.
+- [ ] Confirm that the history-aware Gitleaks job passes on GitHub Actions and review its findings; record the scan revision and timestamp. The configured scan covers history reachable from fetched Git references, but may miss unreachable objects from previous force pushes, GitHub-owned pull refs, and credentials outside the repository.
 - [ ] Verify ignored files are not tracked; `.gitignore` does not remove secrets from Git history.
 - [ ] If any credential was ever exposed, rotate it at the provider first. Removing or rewriting Git history alone does not invalidate a compromised credential.
 - [ ] Check local/generated outputs and historical dataset redistribution permissions.
@@ -27,7 +28,7 @@ Both use live vulnerability databases, which means results may change without co
 - [ ] Use pull requests for changes to `main` and keep unreviewed feature branches outside the release.
 - [ ] Keep the repository private until code, history, data rights and demonstration reviews have finished.
 
-**Branch protection cannot be changed by the current GitHub integration.** GitHub’s repository owner must configure it through repository Settings. Availability for a private personal repository depends on the GitHub plan; GitHub Pro or an eligible organization plan may be required.
+**Branch protection status (2026-11-23):** The owner created a rule matching `main` in GitHub's Branch settings, but GitHub explicitly labels it **Not enforced** for this private personal repository. Do not treat it as an active enforcement control. The integration lacks administration permission to change it. Use voluntary pull requests and check successful CI while private; confirm enforcement after any future plan/visibility change, before relying on the rule.
 
 ## Network and market API
 

@@ -18,7 +18,7 @@ The goal of this checklist is a credible **public source-code portfolio**, not a
 
 - [ ] Independently run the documented browser walkthrough from a fresh checkout. The full-stack HTTP workflow has passed CI on a clean runner, but manual browser interaction on a separate environment has not yet been verified.
 - [ ] Verify the existing market dashboard feature separately against the real backend. Test successful data, empty fixtures, missing API key and provider failure without publishing licensed bookmaker data.
-- [ ] Review current branches **and reachable Git history** for API keys, PostgreSQL passwords, environment files, private outputs and unlicensed datasets. Git ignore rules alone do not remove earlier commits.
+- [ ] Review current branches **and reachable Git history** for API keys, PostgreSQL passwords, environment files, private outputs and unlicensed datasets. An automated Gitleaks history scan has been added on a separate security branch; the scan results and any historical exposure still need review. Git ignore rules alone do not remove earlier commits.
 - [ ] Perform an explicit dependency security review for Python and npm; investigate actionable issues and record what was checked.
 - [ ] Confirm upstream football data licenses and whether additional attribution, branding or redistribution restrictions apply to anything included publicly.
 - [ ] Validate a clean-checkout setup on a second machine or isolated environment, without reliance on a developer's existing PostgreSQL volume.

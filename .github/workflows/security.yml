@@ -42,3 +42,21 @@ jobs:
         run: npm ci
       - name: Audit runtime and build dependencies
         run: npm audit --audit-level=high
+
+  git-history-secrets:
+    name: Scan reachable Git history for secrets
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Detect secrets across local Git references
+        shell: bash
+        run: |
+          set -euo pipefail
+          docker run --rm \
+            --user "$(id -u):$(id -g)" \
+            -v "$GITHUB_WORKSPACE:/workspace:ro" \
+            -w /workspace \
+            ghcr.io/gitleaks/gitleaks:v8.30.1 \
+            git --log-opts="--all" --redact=100 /workspace
