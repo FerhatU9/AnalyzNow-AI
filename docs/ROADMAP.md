@@ -8,7 +8,7 @@ This roadmap distinguishes **locally verified work** from work still under devel
 | Historical data ingestion | Four completed EPL seasons downloaded and imported; 1,520 results stored | Source provenance review and independent score sampling |
 | Forecasting baseline | Weighted independent-Poisson model working; walk-forward evaluation on 760 fixtures | Calibration analysis, stronger baselines and leakage review |
 | PostgreSQL integration | Renamed local PostgreSQL database restored from backup with 1,520 matches confirmed | Re-run database-dependent tests and verify FastAPI and frontend against the migrated database |
-| API and dashboard | Historical forecasting demonstrated; dataset-aware team selectors and synthetic walkthrough implemented on review branch (39 CI Python tests and frontend build passing) | Verify full clean-checkout demo, add frontend tests and accessibility audit |
+| API and dashboard | Historical forecasting and dataset-aware synthetic demo verified locally in browser (39 CI Python tests and frontend build passing); independent clean-checkout verification outstanding | Verify full clean-checkout demo, add frontend tests and accessibility audit |
 | Market data | Live EPL odds retrieval and `/v1/market-odds` endpoint; 35 standard tests passed | Store timestamped odds and build dashboard display |
 | Model-versus-market comparison | Not implemented | Exact fixture matching and point-in-time data alignment |
 | GitHub and CI | Private repository, with Python and frontend CI jobs passing on the branding branch | Confirm safe database migration, review secrets and keep documentation current |

@@ -43,6 +43,8 @@ Open http://127.0.0.1:3011.
 
 The team selectors should show fictional clubs such as Demo City and Demo East. The source label must read **Synthetic demonstration data**, and the initial historical cutoff is **2025-07-19**, after the final fictional match in the bundled dataset. Select two different teams and click **Generate Forecast**.
 
+**Observed local test (2026-11-23):** Demo City vs Demo East rendered successfully with 1.60/1.00 expected goals, 51.3% home-win, 25.0% draw and 23.7% away-win probabilities. The synthetic-data warning was visible. This result demonstrates browser/API integration in the developer's environment; it has not yet been independently reproduced from a clean checkout.
+
 The live bookmaker-odds panel is developed on a separate feature branch and requires its own integration checks and provider credentials. No live bookmaker data is part of this demo.
 
 ## Verification
