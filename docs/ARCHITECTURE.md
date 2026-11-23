@@ -10,6 +10,9 @@ flowchart TD
   D --> E[FastAPI /v1/forecast]
   E --> F[Next.js server route]
   F --> G[React forecast dashboard]
+  C --> M[FastAPI /v1/teams catalog]
+  M --> N[Next.js /api/teams]
+  N --> G
   H[The Odds API] --> I[Odds normalization and bookmaker summary]
   I --> J[FastAPI /v1/market-odds]
   K[Walk-forward backtest] -.-> D
@@ -30,6 +33,7 @@ The Python data access module requests only results with dates **strictly earlie
 - `POST /v1/forecast` accepts home team, away team and an optional historical cutoff date.
 - `GET /v1/market-odds` retrieves current EPL bookmaker prices and converts them to margin-normalized 1X2 market probabilities.
 - The Next.js frontend calls its local `/api/forecast` server route, which forwards requests to FastAPI.
+- `GET /v1/teams` supplies the selectable teams and dataset label to the browser via `/api/teams`. The bundled synthetic dataset is explicitly labeled as fictional.
 - `GET /health` reports process status; it is not a full database or provider availability check.
 
 ## Engineering safeguards
