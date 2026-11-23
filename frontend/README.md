@@ -1,6 +1,6 @@
-# AnalysNow AI — Web Application
+# AnalyzNow AI — Web Application
 
-The AnalysNow AI web application uses **Next.js, React, TypeScript and Tailwind CSS**. It provides the match-selection interface, renders model forecasts, and uses a server-side Next.js route to communicate with the Python forecasting API.
+The AnalyzNow AI web application uses **Next.js, React, TypeScript and Tailwind CSS**. It provides the match-selection interface, renders model forecasts, and uses a server-side Next.js route to communicate with the Python forecasting API.
 
 ## Run locally
 
