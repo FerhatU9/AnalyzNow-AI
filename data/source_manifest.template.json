@@ -1,0 +1,18 @@
+{
+  "source_name": "FILL_IN_PROVIDER",
+  "source_url": "FILL_IN_DATASET_OR_API_URL",
+  "accessed_utc": "YYYY-MM-DDTHH:MM:SSZ",
+  "competition": "FILL_IN_ONE_COMPETITION",
+  "seasons": ["YYYY-YYYY"],
+  "original_data_type": "match_results",
+  "license_url": "FILL_IN_PROVIDER_TERMS_URL",
+  "commercial_use_permitted": null,
+  "machine_learning_use_permitted": null,
+  "redistribution_permitted": null,
+  "scraping_automated_access_permitted": null,
+  "attribution_requirements": "FILL_IN",
+  "research_approval_notes": "FILL_IN; do not assume null rights are granted",
+  "local_filepath": "data/your_licensed_matches.csv",
+  "sha256": "GENERATE_AFTER_ACQUISITION",
+  "quality_checks": ["header", "dates", "duplicates", "completed_scores", "league_consistency"]
+}

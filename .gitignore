@@ -1,0 +1,25 @@
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.env
+.env.*
+!.env.example
+*.sqlite3
+*.db
+coverage.xml
+htmlcov/
+*.log
+# Never commit external data until redistribution rights are confirmed.
+data/*.csv
+!data/synthetic_demo.csv
+outputs/
+# Source snapshots and generated normalized data are never committed by default.
+data/openfootball/
+# Next.js frontend
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+frontend/coverage/
+frontend/.turbo/
