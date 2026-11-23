@@ -1,15 +1,32 @@
-# Data policy
+# AnalysNow AI — Data Sources and Provenance
 
-Only `synthetic_demo.csv` is included. It is ARTIFICIAL and is exclusively for smoke testing.
-Do not use synthetic results as evidence that the forecasting model is useful.
+## Included data
 
-To use real results, manually obtain data that you have rights to use, retain a record of
-license/permission and provenance, and place it at a local path outside version control.
-Accepted columns: Date, HomeTeam, AwayTeam, FTHG, FTAG. ISO or UK day/month dates.
-The starter does not support reliable multi-league inference, xG, or lineup features yet.
+`synthetic_demo.csv` contains **artificial match results** used only to check application functionality. It is not evidence of forecast accuracy.
 
-## OpenFootball CC0 snapshots (v0.2)
+## Historical Premier League results
 
-`analysnow fetch-openfootball --as-of 2025-07-01` obtains four completed English Premier League seasons from [openfootball/football.json](https://github.com/openfootball/football.json) (source repository declares CC0-1.0) and stores an exact snapshot under `data/openfootball/`. No provider key is required; raw downloads only occur when you explicitly run the command. External files are ignored by Git by default.
+The data import workflow downloads completed English Premier League results from [OpenFootball](https://github.com/openfootball/football.json). The upstream repository declares CC0 for its football data. Each download records source URLs, retrieval times, SHA-256 hashes and a normalized dataset hash.
 
-The manifest stores original URLs, SHA-256 hashes, UTC retrieval time, normalized CSV hash, complete-season count checks, and license/source attribution. OpenFootball data has **not** been independently cross-checked for accuracy and is not an xG or player-injury source. See `docs/M1_REAL_DATA_GUIDE.md`.
+The project's local four-season dataset covers 2021/22 to 2024/25 (1,520 match results when complete). Downloaded results and generated outputs are excluded from Git tracking by default.
+
+For instructions, see [Data Pipeline](../docs/DATA_PIPELINE.md).
+
+## Accepted structured-data columns
+
+| Column | Description |
+| --- | --- |
+| `Date` | Match date |
+| `HomeTeam` | Home club name |
+| `AwayTeam` | Away club name |
+| `FTHG` | Full-time goals by the home team |
+| `FTAG` | Full-time goals by the away team |
+
+Do not mix leagues without an explicitly validated competition-strength model. The dataset does not contain event-level xG, team injuries, lineups or bookmaker prices.
+
+## Data policy
+
+- Verify permission before ingesting external datasets; public access alone does not grant commercial redistribution rights.
+- Preserve the original sources, timestamps and checksums for reproducibility.
+- Do not commit API keys, copyrighted provider files, local database exports or personally identifying data.
+- An integrity hash verifies file consistency, **not** the correctness of every original match result.
