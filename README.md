@@ -31,7 +31,7 @@ The current Poisson model uses **historical final scores**, not a full expected-
 - **Market data:** The Odds API, bookmaker margin normalization and multi-bookmaker summaries.
 - **Engineering:** Git, GitHub Actions workflow, documented source provenance and automated checks.
 
-Refer to [System Architecture](docs/ARCHITECTURE.md), [Development Roadmap](docs/ROADMAP.md), and [Technical Research](docs/RESEARCH.md).
+Refer to [System Architecture](docs/ARCHITECTURE.md), [Development Roadmap](docs/ROADMAP.md), [Technical Research](docs/RESEARCH.md) and [Contribution Standards](CONTRIBUTING.md). Documentation is reviewed alongside each verified feature milestone; roadmap status is not changed until tests and evidence support it.
 
 ## Local development (Windows)
 
