@@ -39,6 +39,8 @@ docker compose exec -T postgres pg_restore -U analyznow -d analyznow --no-owner 
 docker compose exec -T postgres psql -U analyznow -d analyznow -c "SELECT COUNT(*) FROM matches;"
 ```
 
+**Developer-local checkpoint:** a restore to the renamed `analyznow` database completed and `SELECT COUNT(*) FROM matches;` returned **1,520**. Application integration and browser verification are still pending.
+
 The previously imported four Premier League seasons should contain **1,520 matches**. If restoring fails because tables already exist, stop and inspect the new database; do not automatically erase volumes or rerun destructive commands.
 
 ## 4. Verify the application
