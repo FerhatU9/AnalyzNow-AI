@@ -1,117 +1,188 @@
-# AnalysNow AI — real-data integration starter v0.2
+# AnalysNow AI
 
-**Status: tested Poisson baseline plus offline-tested OpenFootball CC0 integration. Full-provider download and real-data backtesting require a network-enabled machine. NOT validated betting advice; NOT production-ready.**
+**Football intelligence · Statistical forecasting · Bookmaker market analysis**
 
-This is the first working component of a larger statistics-first football match intelligence product. The long-term architecture combines validated probability models, verified team news, RAG, LangGraph analysis, a FastAPI backend, and a React dashboard. See [Architecture](docs/ARCHITECTURE.md), [Roadmap](docs/ROADMAP.md), and [Research](docs/RESEARCH_2026-11-18.md).
+AnalysNow AI is a football research application that turns historical match results into probabilistic forecasts and provides a separate view of bookmaker-implied market expectations. The project combines a Python forecasting engine, PostgreSQL, FastAPI and a Next.js dashboard.
 
-## New in v0.2 — the next practical milestone
+**Status:** Active development. Local forecasting, database integration, the web dashboard and market-data retrieval have been exercised. The application is **not deployed publicly**, and its forecasts have not been validated for betting or commercial decision-making.
 
-We now have a licensed-data-friendly route to *real* Premier League results via the public-domain OpenFootball project, with original JSON snapshots, SHA-256 provenance hashes, CSV normalization, and verification. The provider adapter is tested with mocked network responses; full real-data backtesting has not been executed in this authoring environment.
+## What the application does
 
-**Start here: [M1 Real Data Guide](docs/M1_REAL_DATA_GUIDE.md)** — sequential Windows commands for fetching four completed Premier League seasons and evaluating the 2024/25 season. This is the next step after downloading and extracting the zip; do not repeat previous Python environment troubleshooting unless a command fails.
+| Capability | Current status |
+| --- | --- |
+| Historical Premier League data ingestion and source snapshots | Implemented; four completed seasons imported locally |
+| PostgreSQL storage and SQL queries | Implemented; 1,520 match records across 26 clubs in the local dataset |
+| Independent-Poisson forecasting model | Implemented; expected goals, match outcome and goal-market probabilities |
+| Walk-forward historical evaluation | Implemented; evaluated on 760 Premier League fixtures from 2023/24–2024/25 |
+| FastAPI forecasting endpoint | Implemented and exercised with PostgreSQL data |
+| Next.js interactive forecasting dashboard | Implemented and exercised locally |
+| Current bookmaker odds retrieval and margin normalization | Implemented; API endpoint and calculation tests passing |
+| Integrated model-versus-market dashboard | Planned; current odds are not yet matched to current-model forecasts |
+| Verified team news, RAG, LangGraph match analysis | Planned |
+| Public deployment, authentication and production monitoring | Not yet implemented |
 
-## Currently implemented
+The current Poisson model uses **historical final scores**, not a full expected-goals (xG) event dataset. Its numerical output is separate from bookmaker odds. No combined model or profitable betting edge has been established.
 
-- Verified snapshot import workflow for OpenFootball English Premier League completed results (mock-network tested; exact source snapshots and SHA-256 manifest).
-- Strict ingestion of a local results CSV (`Date`, `HomeTeam`, `AwayTeam`, `FTHG`, `FTAG`).
-- Recency-weighted independent Poisson goal model with shrinkage toward league means.
-- Expected goals, home/draw/away, over/under 2.5, BTTS and top scorelines; diagnostics and assumptions.
-- Time-safe daily walk-forward backtest against a pre-cutoff naive league-frequency baseline, reporting Brier and log loss and optional per-match journal.
-- Read-only FastAPI development endpoint and automated pytest tests.
-- GitHub Actions CI scaffold, Claude Code and Codex repository guidance.
+## Technology
 
-**Not implemented:** real provider-download success verification in this environment, xG, team injuries/news, RAG, LangGraph, validated prediction accuracy, React, PostgreSQL, authentication, Docker and production deployment. See roadmap. The synthetic dataset is for a code smoke test, not predictive performance evidence.
+- **Backend and modelling:** Python, FastAPI, Pydantic, pytest, and standard Python statistical/numerical code.
+- **Data:** PostgreSQL 17, Psycopg, SQL, Docker Compose, OpenFootball historical results.
+- **Frontend:** Next.js, React, TypeScript, Tailwind CSS.
+- **Market data:** The Odds API, bookmaker margin normalization and multi-bookmaker summaries.
+- **Engineering:** Git, GitHub Actions workflow, documented source provenance and automated checks.
 
-## Step-by-step: run on Windows (PowerShell)
+Refer to [System Architecture](docs/ARCHITECTURE.md), [Development Roadmap](docs/ROADMAP.md), and [Technical Research](docs/RESEARCH.md).
 
-1. Unzip the project to a directory like `C:\Projects\analysnow-ai-starter`.
-2. Install Python 3.11+ and VS Code. Open a PowerShell terminal in the extracted project folder.
-3. Make and activate a virtual environment:
+## Local development (Windows)
+
+### Requirements
+
+Python 3.11 or later, Docker Desktop, Node.js 20.9 or later, npm, Git and VS Code. Use PowerShell from the repository root unless otherwise indicated.
+
+### 1. Python environment
 
 ```powershell
 py -3 -m venv .venv
-.\.venv\Scripts\Activate.ps1
+.\.venv\Scripts\python.exe -m pip install -e ".[dev]"
+.\.venv\Scripts\python.exe -m pytest -q
 ```
 
-If PowerShell blocks activation, use `Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass` in that **terminal only**, then activate again; alternatively skip activation and use `.\.venv\Scripts\python.exe` for each command.
+The project has passed **35 standard automated tests** on the developer's Windows machine. PostgreSQL-dependent integration checks have been run separately; CI status must be verified independently.
 
-4. Install the package and test tools:
+### 2. Local configuration and PostgreSQL
+
+If `.env` does not already exist, copy `.env.example` to `.env` and replace the password placeholder with your own local development password. **Keep an existing `.env` unchanged** if PostgreSQL is already configured.
 
 ```powershell
-python -m pip install --upgrade pip
-python -m pip install -e ".[dev]"
-python -m pytest -q
+Copy-Item .env.example .env
+# Edit POSTGRES_PASSWORD in .env before starting the database.
+docker compose up -d
+docker compose ps
 ```
 
-5. Validate the **synthetic** CSV, then run a demonstration prediction:
+The database is bound to `127.0.0.1:5433` for local use. The database container stores its files in a Docker volume. Never commit `.env` or API credentials.
+
+### 3. Historical results and schema
+
+For a new database, create its tables:
 
 ```powershell
-analysnow validate data\synthetic_demo.csv
-analysnow predict data\synthetic_demo.csv "Demo North" "Demo South" --as-of 2025-08-01
-analysnow backtest data\synthetic_demo.csv --min-training 35 --output outputs\synthetic_journal.json
+docker compose cp database/schema.sql postgres:/tmp/schema.sql
+docker compose exec -T postgres psql -U analysnow -d analysnow -v ON_ERROR_STOP=1 -f /tmp/schema.sql
 ```
 
-6. Start the development API (PowerShell):
+Retrieve completed Premier League results and verify the saved snapshot:
 
 ```powershell
-$env:FOOTBALL_CSV_PATH = "data/synthetic_demo.csv"
-uvicorn football_intel.api:app --reload
+.\.venv\Scripts\python.exe -m football_intel fetch-openfootball --as-of 2025-07-01
+.\.venv\Scripts\python.exe -m football_intel verify-snapshot data\openfootball\epl_2021_2025
 ```
 
-Visit http://127.0.0.1:8000/docs and try `POST /v1/forecast` with:
+Import the processed results into PostgreSQL:
+
+```powershell
+docker compose cp "data\openfootball\epl_2021_2025\processed\epl_2021-22_2022-23_2023-24_2024-25.csv" postgres:/tmp/epl_matches.csv
+docker compose cp database/import_matches.sql postgres:/tmp/import_matches.sql
+docker compose exec -T postgres psql -U analysnow -d analysnow -v ON_ERROR_STOP=1 -f /tmp/import_matches.sql
+```
+
+For the specified four seasons, the expected count is **1,520 completed matches**, provided all source seasons are complete. Importing again updates matching fixture scores instead of inserting duplicate fixtures. More detail is available in [Data Pipeline](docs/DATA_PIPELINE.md). Do not repeat imports unnecessarily on an existing working database.
+
+### 4. FastAPI backend
+
+In a PowerShell terminal at the repository root:
+
+```powershell
+$env:FOOTBALL_DATA_SOURCE = "postgres"
+.\.venv\Scripts\python.exe -m uvicorn football_intel.api:app --host 127.0.0.1 --port 9011
+```
+
+Open [FastAPI documentation](http://127.0.0.1:9011/docs). Example request for `POST /v1/forecast`:
 
 ```json
 {
-  "home_team": "Demo North",
-  "away_team": "Demo South",
-  "as_of": "2025-08-01"
+  "home_team": "Arsenal FC",
+  "away_team": "Chelsea FC",
+  "as_of": "2025-07-01"
 }
 ```
 
-Close the server with **Ctrl+C**. To use real data later, set `FOOTBALL_CSV_PATH` to an authorized local CSV path, and run validations and backtests. The code does not download sports data automatically.
+This is a historical model demonstration based on data available before the cutoff, **not** a current Arsenal–Chelsea match prediction.
 
-## Important forecasting limitations
+### 5. Next.js frontend
 
-- Training uses only completed fixtures before a cutoff date. Date-only CSV data cannot distinguish match order within the same day; all same-day scores are deliberately excluded.
-- There is no league ID in the starting schema. Import one *single* competition at a time, not pooled competitions of different strengths.
-- A basic Poisson model assumes each team's goal count is independent, and does not yet use xG, injured players, tactics or news.
-- Accuracy and calibration have NOT been evaluated on real historical football results here.
-- The synthetic sample cannot demonstrate the model's usefulness or any market edge.
-- The local API has no user authentication, provider access controls, rate limits or hardened deployment. Do **not** expose it publicly.
+Inside `frontend`, create `.env.local` with:
 
-## Claude Code and Codex — Windows
-
-These are **development assistants**, not the match analysis agents that will later run inside the product.
-
-**Codex**: Install Node.js first, then in PowerShell:
-
-```powershell
-npm install -g @openai/codex
-codex
+```dotenv
+FOOTBALL_API_URL=http://127.0.0.1:9011
 ```
 
-Sign in with ChatGPT as prompted. Start in the project root, read `AGENTS.md`, run `/permissions` to restrict actions, and ask:
-
-> Review `src/football_intel/model.py` and `backtest.py` for possible time leakage and numerical errors. Do not modify files yet. Report specific findings and suggested tests.
-
-**Claude Code** (requires a paid eligible Claude plan or separately billed Anthropic Console account):
+In a **separate** PowerShell terminal:
 
 ```powershell
-irm https://claude.ai/install.ps1 | iex
-claude --version
-claude
+cd frontend
+npm.cmd ci
+npm.cmd run lint
+npm.cmd run dev -- --hostname 127.0.0.1 --port 3011
 ```
 
-Read `CLAUDE.md`, then ask:
+Open [AnalysNow AI dashboard](http://127.0.0.1:3011). Keep the PostgreSQL container and FastAPI terminal running while using the frontend.
 
-> Review the Poisson forecasting baseline and propose a minimal dataset provenance manifest schema. Do not modify files or fetch external data until I approve a plan.
+## API overview
 
-Never paste secrets into chat or commit `.env`. Use `git diff`, `python -m pytest -q` and a commit after manually reviewing changed files. Use separate agent sessions when helpful. Do not enable unattended production deployment.
+| Method | Route | Purpose |
+| --- | --- | --- |
+| `GET` | `/health` | Basic development server status (not a database readiness check) |
+| `POST` | `/v1/forecast` | Generate a statistical forecast for teams and cutoff date |
+| `GET` | `/v1/market-odds` | Retrieve current EPL bookmaker-implied market probabilities |
 
-## License and data provenance
+Market odds access requires `ODDS_API_KEY` in the local `.env`. Run `python -m football_intel.market_odds` to inspect the provider response; this consumes provider API quota. The current dashboard displays statistical forecasts; the live market section is still being developed.
 
-This original starter code is MIT licensed; that **does not** grant rights to external football data. Only `data/synthetic_demo.csv` is bundled and is entirely artificial. See `data/README.md` and `docs/RESEARCH_2026-11-18.md`. Sources and permissions must be checked before any external data ingestion, storage, training, RAG or commercial use.
+## Testing and evaluation
 
-## Next phase
+```powershell
+.\.venv\Scripts\python.exe -m pytest -q
+.\.venv\Scripts\python.exe -m pytest -q tests/integration_postgres.py
+```
 
-Run the OpenFootball fetch and offline verification on a network-enabled Windows machine using [M1 guide](docs/M1_REAL_DATA_GUIDE.md), inspect the actual completed matches and metric output, then investigate model weaknesses before considering a stronger model. Only after those results should we select stronger modeling features and add RAG/news.
+The second command explicitly runs the PostgreSQL-dependent tests and requires a populated local database.
+
+For a historical evaluation:
+
+```powershell
+.\.venv\Scripts\python.exe -m football_intel backtest data\openfootball\epl_2021_2025\processed\epl_2021-22_2022-23_2023-24_2024-25.csv --min-training 380 --test-from 2023-08-01 --output outputs\epl_2023_2025_backtest.json
+```
+
+A developer-local walk-forward evaluation on 760 Premier League matches reported a **multiclass Brier score of 0.579285**, compared with **0.646967** for a simple historical league-frequency baseline, and **log loss of 0.975758**, compared with **1.068422** for that baseline. These results have not yet been independently reproduced through CI or compared with stronger forecasting methods. They do not establish calibration, future performance, or betting profitability.
+
+## Repository layout
+
+```text
+AnalysNow-AI/
+├── database/             PostgreSQL schema and match importer
+├── data/                 Synthetic sample and data provenance guidance
+├── docs/                 Architecture, roadmap, research, data pipeline
+├── frontend/             Next.js dashboard and server-side API proxy
+├── src/football_intel/   Forecasting, ingestion, database and market modules
+├── tests/                Automated tests and optional database integration checks
+├── compose.yaml          Local PostgreSQL service
+├── pyproject.toml        Python package configuration
+└── README.md             Project overview and setup
+```
+
+## Data rights, safety and limitations
+
+- The OpenFootball source repository declares its football results under CC0. Data provenance is retained locally; scores have not all been independently verified.
+- Live odds require an external provider API key and remain subject to provider usage and redistribution terms. Do not assume rights to republish commercial odds.
+- Historical results currently stop at the end of the 2024/25 Premier League season. They are **not current-form statistics** for upcoming fixtures.
+- The independent-Poisson model does not yet account for injuries, suspensions, xG event data, tactical changes or correlated goal scores.
+- The application is a local research tool without public-user authentication, production security controls or deployment readiness.
+- Forecasts represent uncertainty and are **not betting recommendations or guarantees of profit**. No real-money betting functionality is provided.
+
+## Project direction
+
+Planned work includes dynamic club selection, a market-data dashboard, time-matched statistical-versus-market comparisons, improved forecast evaluation, verified news, retrieval-augmented analysis, automated monitoring, and secure deployment. Each feature will be considered complete only when its tests and results can be independently checked. See the [Development Roadmap](docs/ROADMAP.md).
+
+## License
+
+Project source code is provided under the [MIT License](LICENSE). Third-party football data, bookmaker feeds and other external materials are governed by their own terms.

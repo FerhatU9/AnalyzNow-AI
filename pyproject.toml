@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "analysnow-ai"
 version = "0.2.0"
-description = "Statistics-first football forecasting starter, with time-safe evaluation"
+description = "Football intelligence, probabilistic forecasting, and market analysis"
 readme = "README.md"
 requires-python = ">=3.11"
 license = {text = "MIT"}

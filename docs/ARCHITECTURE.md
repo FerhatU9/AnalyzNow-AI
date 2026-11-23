@@ -1,67 +1,60 @@
-# AnalysNow AI — system architecture (proposed)
+# AnalysNow AI — System Architecture
 
-## 1. System boundaries
+## Implemented local system
 
 ```mermaid
 flowchart TD
-  A[Permitted match results, licensed statistics] --> B[Ingestion and provenance checks]
-  A2[Official clubs, competition announcements, licensed news] --> C[News ingestion and verification]
-  B --> D[(Structured PostgreSQL / SQL)]
-  D --> E[Versioned feature engineering]
-  E --> F[Statistical and ML models]
-  F --> G[Forecast snapshot store]
-  C --> H[(Evidence store / pgvector)]
-  C --> I[Structured confirmed/disputed availability]
-  H --> J[Time-aware RAG with citations]
-  I --> K[Evidence & impact assessment]
-  G --> L[LangGraph match-analysis orchestration]
-  J --> L
-  K --> L
-  L --> M[Fact and number quality gates]
-  M --> N[Versioned cited match report]
-  N --> O[FastAPI]
-  O --> P[Next.js / React]
-  Q[Walk-forward / calibration evaluation] -. validates .-> F
-  R[RAG + citation evaluation] -. validates .-> J
-  S[CI/CD, logging, security, monitoring] -. monitors .-> O
+  A[OpenFootball historical EPL results] --> B[Validation and provenance]
+  B --> C[(PostgreSQL: teams and matches)]
+  C --> D[Python Poisson forecasting engine]
+  D --> E[FastAPI /v1/forecast]
+  E --> F[Next.js server route]
+  F --> G[React forecast dashboard]
+  H[The Odds API] --> I[Odds normalization and bookmaker summary]
+  I --> J[FastAPI /v1/market-odds]
+  K[Walk-forward backtest] -.-> D
+  L[Pytest] -.-> E
+  L -.-> J
 ```
 
-## 2. Invariants
+**Important boundary:** The current market odds API is separate from the historical statistical forecasts. The dashboard does not yet contain a live-odds section, and the system does not blend their probabilities.
 
-- Forecast probability is a numeric model output, not generated or adjusted directly by an LLM.
-- Data rights and provenance recorded before ingestion; forbidden/restricted sources are not ingested.
-- Every training feature must have been knowable at the historical cutoff. Versioning includes observed_at and published_at.
-- Official confirmed lineup updates are separate snapshots from earlier reports.
-- News and retrieved pages are untrusted **data**, not executable prompts/instructions.
-- Every substantive claim in a report is traceable to a source or an explicitly identified statistical calculation.
-- The product exposes uncertainty; it abstains from unsupported player-impact adjustments.
+## Data model
 
-## 3. First deliverable actually implemented
+`teams` stores a unique club name and generated identifier. `matches` stores the fixture date, references to the home and away clubs, and completed match scores. Uniqueness and nonnegative-score constraints help maintain integrity. The database currently represents completed results, not fixtures with kickoff timestamps, source revisions or multiple competitions.
 
-- Read and validate local completed match CSV (no scraping).
-- Build recency-weighted independent-Poisson benchmark on pre-cutoff results.
-- Calculate mutually coherent home/draw/away, over/under 2.5, BTTS, top-score probabilities.
-- Walk-forward scoring vs pre-cutoff historical league-rate baseline.
-- FastAPI development endpoint and automated tests.
+The Python data access module requests only results with dates **strictly earlier** than the forecast cutoff. The forecast model computes expected goals and a distribution over likely scores, then derives home/draw/away and other goal probabilities.
 
-Not implemented: PostgreSQL, licensed API ingestion, xG, Elo/Dixon-Coles, player injury model, news/RAG, LangGraph, real-time fixtures/odds, frontend, user auth, production deploy. These are explicit next milestones.
+## HTTP interfaces
 
-## 4. Planned service contracts (design only)
+- `POST /v1/forecast` accepts home team, away team and an optional historical cutoff date.
+- `GET /v1/market-odds` retrieves current EPL bookmaker prices and converts them to margin-normalized 1X2 market probabilities.
+- The Next.js frontend calls its local `/api/forecast` server route, which forwards requests to FastAPI.
+- `GET /health` reports process status; it is not a full database or provider availability check.
 
-`Fixture`: fixture_id, competition_id, kickoff_utc, home_team_id, away_team_id, source_id, observed_at.
+## Engineering safeguards
 
-`HistoricalFeature`: fixture_id, feature_name, feature_value, data_as_of, computed_at, data_version.
+- Forecasts use only data dated before their cutoff, avoiding same-day/future result leakage.
+- LLMs must never invent or directly overwrite numerical model probabilities.
+- Tests cover API behavior, mathematical functions, historical results, error handling and market-data responses.
+- Bookmaker prices and timestamps must be treated as source data, not evidence of a guaranteed advantage.
+- API keys and the PostgreSQL password are loaded from local environment configuration and must not be committed.
 
-`NewsClaim`: claim_id, target_entity_id, source_url, original_source_id, published_at, retrieved_at, event_at, fixture_id, claim_text, status (confirmed/probable/disputed/outdated/unknown), confidence_method.
+## Planned architecture
 
-`ForecastSnapshot`: fixture_id, created_at_utc, cutoff_utc, model_version, feature_snapshot_id, evidence_snapshot_id, markets, limitations, hash.
+```mermaid
+flowchart TD
+  A[Licensed statistics and current fixtures] --> B[Validated data platform]
+  C[Verified club and player news] --> D[Source verification]
+  B --> E[Calibrated forecasting models]
+  D --> F[Time-aware evidence retrieval / RAG]
+  G[Historical bookmaker odds snapshots] --> H[Market evaluation]
+  E --> I[Match analysis orchestration]
+  F --> I
+  H --> I
+  I --> J[Citation and numerical consistency checks]
+  J --> K[Versioned match reports and dashboard]
+  L[Monitoring, audit logs and access controls] -.-> K
+```
 
-`Report`: forecast_id, citations, generated_at, verified_at, data_quality_flags, model_disclaimer.
-
-## 5. Forecast accuracy concerns
-
-The initial independent-Poisson baseline assumes goals independent, lacks draw correction, treats match score as the goal input, and is not league- or season-strength calibrated. Multi-league mixes are especially invalid without adjusting for differences in strength/venue. No claims of betting profitability should be made. Next model candidates: calibrated Elo, Dixon-Coles, and feature-based gradient boosting; preserve out-of-time evaluation with independent season holdout and league grouping.
-
-## 6. Future multi-sport design
-
-Use sport-specific `FeatureBuilder`, `Forecaster`, `MarketDefinition` contracts rather than encoding soccer labels in every future module. Do not build these layers yet, until football models are demonstrably reliable.
+Additional planned capabilities include properly licensed current data, calibrated models, player availability, LangGraph research workflows, pgvector retrieval, saved forecasts, authentication and secure cloud deployment. These are **not** included in the current local application.

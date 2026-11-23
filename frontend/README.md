@@ -1,36 +1,33 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AnalysNow AI — Web Application
 
-## Getting Started
+The AnalysNow AI web application uses **Next.js, React, TypeScript and Tailwind CSS**. It provides the match-selection interface, renders model forecasts, and uses a server-side Next.js route to communicate with the Python forecasting API.
 
-First, run the development server:
+## Run locally
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+1. Start PostgreSQL and FastAPI as described in the [main README](../README.md).
+2. Create `frontend/.env.local` with `FOOTBALL_API_URL=http://127.0.0.1:9011`.
+3. In a PowerShell terminal:
+
+```powershell
+cd frontend
+npm.cmd ci
+npm.cmd run lint
+npm.cmd run dev -- --hostname 127.0.0.1 --port 3011
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://127.0.0.1:3011.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Application structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `src/app/page.tsx` — interactive forecasting page.
+- `src/app/api/forecast/route.ts` — server-side proxy for `POST /v1/forecast`.
+- `src/app/globals.css` — application styling.
+- `src/app/layout.tsx` — shared page layout.
 
-## Learn More
+## Current scope
 
-To learn more about Next.js, take a look at the following resources:
+The interface provides home/away team inputs, a historical cutoff date, expected goals, match-outcome probability bars and likely scorelines. The bookmaker-odds endpoint is available from FastAPI, but has **not yet been added to this dashboard**.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Team names must match the names in the database. The interface is intended for **local development**; public deployment, authentication, accessibility audits and end-to-end browser tests are future work.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+See the [system architecture](../docs/ARCHITECTURE.md) and [development roadmap](../docs/ROADMAP.md).
