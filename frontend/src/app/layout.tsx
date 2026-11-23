@@ -13,9 +13,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "AnalysNow AI | Football Intelligence",
+  title: "AnalyzNow AI | Football Intelligence",
   description:
-    "AnalysNow AI provides statistical football forecasts and evidence-based match analysis.",
+    "AnalyzNow AI provides statistical football forecasts and evidence-based match analysis.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

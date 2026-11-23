@@ -92,7 +92,7 @@ export default function Home() {
             Football Intelligence Platform
           </p>
           <h1 className="mt-3 text-4xl font-bold">
-            AnalysNow AI
+            AnalyzNow AI
           </h1>
           <p className="mt-3 text-slate-400">
             Football statistics and evidence-based match forecasting.
