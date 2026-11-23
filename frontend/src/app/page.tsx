@@ -2,6 +2,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import MarketOdds from "@/components/market-odds";
 
 type Forecast = {
   home_team: string;
@@ -250,6 +251,7 @@ export default function Home() {
 
           </section>
         )}
+        <MarketOdds />
       </div>
     </main>
   );
