@@ -13,7 +13,7 @@ This walkthrough runs the historical forecasting interface with **fictional** fo
 From the repository root in Windows PowerShell:
 
 ```powershell
-Copy-Item .env.example .env
+if (-not (Test-Path .env)) { Copy-Item .env.example .env }
 $env:FOOTBALL_DATA_SOURCE = "csv"
 $env:FOOTBALL_CSV_PATH = "data/synthetic_demo.csv"
 .\.venv\Scripts\python.exe -m uvicorn football_intel.api:app --host 127.0.0.1 --port 9011

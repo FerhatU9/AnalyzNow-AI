@@ -35,7 +35,7 @@ Refer to [System Architecture](docs/ARCHITECTURE.md), [Development Roadmap](docs
 
 ## Quick local demonstration
 
-For a no-credentials walkthrough using **fictional match data**, see [Reproducible Local Demo](docs/DEMO.md). It uses the included synthetic CSV and does **not** reproduce real-match evaluation or live bookmaker odds. The team selector and source labels are implemented on a separate branch and must pass CI before release.
+For a no-credentials walkthrough using **fictional match data**, see [Reproducible Local Demo](docs/DEMO.md). It uses the included synthetic CSV and does **not** reproduce real-match evaluation or live bookmaker odds. The team selector and source-label changes passed automated CI; manual clean-checkout browser verification remains pending. See the [Public Release Checklist](docs/PUBLIC_RELEASE_CHECKLIST.md).
 
 ## Local development (Windows)
 
@@ -51,7 +51,7 @@ py -3 -m venv .venv
 .\.venv\Scripts\python.exe -m pytest -q
 ```
 
-The developer previously verified **35 standard automated tests** and **2 PostgreSQL integration tests** using the restored local database. The new demo tests are being checked separately through CI. These results are not a claim of commercial readiness.
+GitHub Actions passed **39 Python tests** and the frontend lint and production build on the reproducible-demo branch. Separately, the developer previously verified **2 PostgreSQL integration tests** with the restored local 1,520-match database. These results do not establish current-match predictive accuracy or deployment security.
 
 ### 2. Local configuration and PostgreSQL
 
@@ -60,8 +60,8 @@ The developer previously verified **35 standard automated tests** and **2 Postgr
 If `.env` does not already exist, copy `.env.example` to `.env` and replace the password placeholder with your own local development password. **Existing local installations:** the PostgreSQL account and Compose project must be migrated before switching to the new database identifiers. Follow [Database Migration](docs/DATABASE_MIGRATION.md) rather than replacing a working `.env` or deleting a volume.
 
 ```powershell
-Copy-Item .env.example .env
-# Edit POSTGRES_PASSWORD in .env before starting the database.
+if (-not (Test-Path .env)) { Copy-Item .env.example .env }
+# Edit POSTGRES_PASSWORD in .env before starting a NEW database.
 docker compose up -d
 docker compose ps
 ```
