@@ -12,12 +12,14 @@ flowchart TD
   F --> G[React forecast dashboard]
   H[The Odds API] --> I[Odds normalization and bookmaker summary]
   I --> J[FastAPI /v1/market-odds]
+  J --> M[Next.js /api/market-odds proxy]
+  M --> N[On-demand market dashboard]
   K[Walk-forward backtest] -.-> D
   L[Pytest] -.-> E
   L -.-> J
 ```
 
-**Important boundary:** The current market odds API is separate from the historical statistical forecasts. The dashboard does not yet contain a live-odds section, and the system does not blend their probabilities.
+**Important boundary:** A separate on-demand bookmaker-odds view is implemented on the feature branch, pending end-to-end verification. Historical forecasts and live market probabilities remain separate; the system does not blend their probabilities.
 
 ## Data model
 
@@ -30,6 +32,7 @@ The Python data access module requests only results with dates **strictly earlie
 - `POST /v1/forecast` accepts home team, away team and an optional historical cutoff date.
 - `GET /v1/market-odds` retrieves current EPL bookmaker prices and converts them to margin-normalized 1X2 market probabilities.
 - The Next.js frontend calls its local `/api/forecast` server route, which forwards requests to FastAPI.
+- The new `/api/market-odds` server route forwards user-triggered bookmaker requests to FastAPI without exposing the provider API key in browser code.
 - `GET /health` reports process status; it is not a full database or provider availability check.
 
 ## Engineering safeguards

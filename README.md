@@ -17,7 +17,8 @@ AnalyzNow AI is a football research application that turns historical match resu
 | FastAPI forecasting endpoint | Implemented and exercised with PostgreSQL data |
 | Next.js interactive forecasting dashboard | Implemented and exercised locally |
 | Current bookmaker odds retrieval and margin normalization | Implemented; API endpoint and calculation tests passing |
-| Integrated model-versus-market dashboard | Planned; current odds are not yet matched to current-model forecasts |
+| Live bookmaker market dashboard | Implemented on the feature branch; pending end-to-end local verification |
+| Integrated model-versus-market forecasting | Not implemented; fixtures and prediction dates are not yet aligned |
 | Verified team news, RAG, LangGraph match analysis | Planned |
 | Public deployment, authentication and production monitoring | Not yet implemented |
 
@@ -138,7 +139,7 @@ Open [AnalyzNow AI dashboard](http://127.0.0.1:3011). Keep the PostgreSQL contai
 | `POST` | `/v1/forecast` | Generate a statistical forecast for teams and cutoff date |
 | `GET` | `/v1/market-odds` | Retrieve current EPL bookmaker-implied market probabilities |
 
-Market odds access requires `ODDS_API_KEY` in the local `.env`. Run `python -m football_intel.market_odds` to inspect the provider response; this consumes provider API quota. The current dashboard displays statistical forecasts; the live market section is still being developed.
+Market odds access requires `ODDS_API_KEY` in the local `.env`. Run `python -m football_intel.market_odds` to inspect the provider response; this consumes provider API quota. The forecasting dashboard provides a separate **Load market odds** button to request live bookmaker summaries on demand. The interface does not blend historical forecast probabilities with live market probabilities. The new frontend feature requires local end-to-end verification before merging.
 
 ## Testing and evaluation
 
