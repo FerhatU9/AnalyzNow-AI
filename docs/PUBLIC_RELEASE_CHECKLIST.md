@@ -12,13 +12,14 @@ The goal of this checklist is a credible **public source-code portfolio**, not a
 - [x] A no-provider-key, no-database demonstration is implemented using an explicitly labeled synthetic data file.
 - [x] Synthetic team selection and API failures are covered by automated tests.
 - [x] Documentation distinguishes historical statistical forecasts, fictional demo results and live market probabilities.
-- [x] On-demand market dashboard UI and server-side proxy are prepared on a separate integration branch. Live-provider browser verification is still outstanding.
+- [x] Developer-local live-provider browser test (2026-11-23): the market panel retrieved 21 upcoming fixtures with bookmaker-derived 1X2 probabilities, quoted bookmaker counts and odds-update timestamps. This confirms a successful live retrieval in the developer environment; it does not independently validate the underlying prices, provider contract or accuracy.
+- [x] Defensive market parsing and duplicate bookmaker-quote tests added on the integration branch; retain this checkpoint only if updated CI checks pass.
 - [x] Developer-local browser test on 2026-11-23: the team catalog loaded, Demo City vs Demo East forecast rendered with cutoff 2025-07-19, expected goals 1.60/1.00 and outcome probabilities 51.3%/25.0%/23.7%. The synthetic-data label was visible. This verifies the tested local environment, **not** a fresh checkout.
 
 ## Required before public visibility
 
 - [ ] Independently run the documented browser walkthrough from a fresh checkout. The full-stack HTTP workflow has passed CI on a clean runner, but manual browser interaction on a separate environment has not yet been verified.
-- [ ] Verify the existing market dashboard feature separately against the real backend. Test successful data, empty fixtures, missing API key and provider failure without publishing licensed bookmaker data.
+- [ ] Finish market-dashboard negative-case browser verification: empty fixtures, invalid/incomplete payloads, absent API key and provider/network failure. Successful live retrieval has been observed, and missing-key handling passed earlier CI; new parser tests must pass updated CI.
 - [ ] Review current branches **and reachable Git history** for API keys, PostgreSQL passwords, environment files, private outputs and unlicensed datasets. Git ignore rules alone do not remove earlier commits.
 - [ ] Perform an explicit dependency security review for Python and npm; investigate actionable issues and record what was checked.
 - [ ] Confirm upstream football data licenses and whether additional attribution, branding or redistribution restrictions apply to anything included publicly.
