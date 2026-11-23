@@ -23,3 +23,7 @@ frontend/.next/
 frontend/out/
 frontend/coverage/
 frontend/.turbo/
+
+# Local database backups
+*.dump
+*.backup

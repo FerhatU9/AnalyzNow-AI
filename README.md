@@ -51,6 +51,8 @@ The project has passed **35 standard automated tests** on the developer's Window
 
 ### 2. Local configuration and PostgreSQL
 
+**Existing installations:** Read [Local Database Migration](docs/DATABASE_MIGRATION.md) before starting Docker with updated identifiers. Changing the Compose project name does not rename or transfer an existing PostgreSQL volume.
+
 If `.env` does not already exist, copy `.env.example` to `.env` and replace the password placeholder with your own local development password. **Existing local installations:** the PostgreSQL account and Compose project must be migrated before switching to the new database identifiers. Follow [Database Migration](docs/DATABASE_MIGRATION.md) rather than replacing a working `.env` or deleting a volume.
 
 ```powershell
