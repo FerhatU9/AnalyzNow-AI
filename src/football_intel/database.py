@@ -23,8 +23,8 @@ def load_matches_from_database(as_of: date) -> list[Match]:
     with psycopg.connect(
         host="127.0.0.1",
         port=5433,
-        dbname="analysnow",
-        user="analysnow",
+        dbname="analyznow",
+        user="analyznow",
         password=password,
         connect_timeout=5,
     ) as connection:
