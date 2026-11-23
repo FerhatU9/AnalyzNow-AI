@@ -2,6 +2,7 @@
 "use client";
 
 import { useEffect, useState, type FormEvent } from "react";
+import MarketOdds from "@/components/market-odds";
 
 type Forecast = {
   home_team: string;
@@ -220,6 +221,8 @@ export default function Home() {
             not evidence of current team form.
           </p>
         </section>
+
+        <MarketOdds />
 
         {error && (
           <p role="alert" className="mt-6 rounded-lg bg-red-950 p-4 text-red-200">

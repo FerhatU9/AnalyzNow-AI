@@ -61,7 +61,7 @@ jobs:
           npm --prefix frontend ci
       - name: Build Next.js
         run: npm --prefix frontend run build
-      - name: Verify real API and web connections
+      - name: Verify synthetic demo and market provider errors
         shell: bash
         run: |
           set -euo pipefail
@@ -70,7 +70,7 @@ jobs:
           npm --prefix frontend run start -- --hostname 127.0.0.1 --port 3011 > /tmp/analyznow-web.log 2>&1 &
           WEB_PID=$!
           trap 'kill "$API_PID" "$WEB_PID" 2>/dev/null || true' EXIT
-          python scripts/verify_demo.py || {
+          python scripts/verify_demo.py && python scripts/verify_market_unconfigured.py || {
             cat /tmp/analyznow-api.log
             cat /tmp/analyznow-web.log
             exit 1
