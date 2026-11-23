@@ -1,5 +1,3 @@
-export const dynamic = "force-dynamic";
-
 const noStore = { "Cache-Control": "no-store" };
 
 export async function GET() {
