@@ -17,7 +17,7 @@ Both use live vulnerability databases, which means results may change without co
 ## Credential and repository-history review
 
 - [ ] Examine every reachable branch and historical commit for accidental credentials, especially `.env`, `ODDS_API_KEY`, PostgreSQL passwords, cloud tokens, private keys and personal files.
-- [ ] Confirm that the history-aware Gitleaks job passes on GitHub Actions and review its findings; record the scan revision and timestamp. The configured scan covers history reachable from fetched Git references, but may miss unreachable objects from previous force pushes, GitHub-owned pull refs, and credentials outside the repository.
+- [x] Gitleaks v8.30.1 passed on GitHub Actions on 2026-11-23 (run 45223539407). The job reported **46 commits scanned, ~854 KB, no leaks found**. This covers history reachable from fetched Git references only; it may miss unreachable objects from previous force pushes, GitHub-owned pull refs not fetched, and credentials outside the repository. A manual historical-data and sensitive-file inspection is still outstanding.
 - [ ] Verify ignored files are not tracked; `.gitignore` does not remove secrets from Git history.
 - [ ] If any credential was ever exposed, rotate it at the provider first. Removing or rewriting Git history alone does not invalidate a compromised credential.
 - [ ] Check local/generated outputs and historical dataset redistribution permissions.
