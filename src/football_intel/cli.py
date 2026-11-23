@@ -1,4 +1,4 @@
-"""`analysnow` / `python -m football_intel` commands."""
+"""`analyznow` / `python -m football_intel` commands."""
 from __future__ import annotations
 
 import argparse
@@ -12,7 +12,7 @@ from .providers.openfootball import DEFAULT_SEASONS, download_seasons, verify_sn
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="AnalysNow AI local research starter")
+    parser = argparse.ArgumentParser(description="AnalyzNow AI local research utilities")
     subs = parser.add_subparsers(dest="command", required=True)
     validate = subs.add_parser("validate", help="Validate a match results CSV")
     validate.add_argument("csv", type=Path)
