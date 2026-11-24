@@ -1,0 +1,99 @@
+{
+  "product": "AnalyzNow AI",
+  "report_type": "Historical model evaluation \u2014 not current match predictions",
+  "seasons": [
+    {
+      "season": "2024/25",
+      "methodology": "Exploratory: test season reviewed during model development",
+      "matches": 380,
+      "models": {
+        "poisson": {
+          "brier": 0.594368,
+          "log_loss": 0.996779,
+          "outcome_accuracy": 0.521053,
+          "average_draw_probability": 0.225542
+        },
+        "elo": {
+          "brier": 0.590903,
+          "log_loss": 0.990428,
+          "outcome_accuracy": 0.534211,
+          "average_draw_probability": 0.189878
+        },
+        "ensemble": {
+          "brier": 0.587464,
+          "log_loss": 0.986054,
+          "outcome_accuracy": 0.526316,
+          "average_draw_probability": 0.20771
+        }
+      },
+      "poisson_halves": {
+        "first_half": {
+          "matches": 203,
+          "brier": 0.618706
+        },
+        "second_half": {
+          "matches": 177,
+          "brier": 0.566454
+        }
+      },
+      "actual_draw_frequency": 0.244737
+    },
+    {
+      "season": "2025/26",
+      "methodology": "Later-season evaluation: settings and ensemble weights fixed beforehand",
+      "matches": 380,
+      "models": {
+        "poisson": {
+          "brier": 0.618784,
+          "log_loss": 1.031207,
+          "outcome_accuracy": 0.492105,
+          "average_draw_probability": 0.235879
+        },
+        "elo": {
+          "brier": 0.627743,
+          "log_loss": 1.043083,
+          "outcome_accuracy": 0.486842,
+          "average_draw_probability": 0.199581
+        },
+        "ensemble": {
+          "brier": 0.618067,
+          "log_loss": 1.029563,
+          "outcome_accuracy": 0.489474,
+          "average_draw_probability": 0.21773
+        }
+      },
+      "poisson_halves": {
+        "first_half": {
+          "matches": 209,
+          "brier": 0.590233
+        },
+        "second_half": {
+          "matches": 171,
+          "brier": 0.653679
+        }
+      },
+      "actual_draw_frequency": 0.273684
+    }
+  ],
+  "heldout_ensemble_minus_poisson": {
+    "brier_delta": {
+      "observed": -0.000716,
+      "lower": -0.009735,
+      "upper": 0.008487,
+      "includes_zero": true
+    },
+    "log_loss_delta": {
+      "observed": -0.001643,
+      "lower": -0.014125,
+      "upper": 0.011237,
+      "includes_zero": true
+    },
+    "accuracy_delta": {
+      "observed": -0.002632,
+      "lower": -0.027473,
+      "upper": 0.022559,
+      "includes_zero": true
+    }
+  },
+  "limitations": "2024/25 ensemble comparison was exploratory. 2025/26 used preselected settings, but a single later season does not prove robust superiority. Changes between periods do not establish the cause of performance variation. Market odds are not included in these model scores."
+}

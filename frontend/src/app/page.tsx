@@ -1,5 +1,6 @@
 
 "use client";
+import Link from "next/link";
 
 import { useEffect, useState, type FormEvent } from "react";
 
@@ -143,6 +144,16 @@ export default function Home() {
           <p className="mt-3 text-slate-400">
             Football statistics and evidence-based match forecasting.
           </p>
+
+    <nav aria-label="Main navigation" className="mt-6 flex flex-wrap gap-3">
+    <Link
+    href="/model-quality"
+    className="inline-flex rounded-lg border border-emerald-500/40 px-4 py-2 text-sm font-semibold text-emerald-300 transition-colors hover:bg-emerald-500/10"
+  >
+    View Model Quality
+  </Link>
+  </nav>
+
         </header>
 
         <section className="rounded-2xl border border-slate-800 bg-slate-900 p-6">
