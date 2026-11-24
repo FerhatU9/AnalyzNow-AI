@@ -30,7 +30,7 @@ test("shows a clear message if the team API is unavailable", async ({ page }) =>
   });
 
   await page.goto("/");
-  await expect(page.getByRole("alert")).toContainText("Cannot load teams");
+  await expect(page.locator('p[role="alert"]')).toContainText("Cannot load teams");
   await expect(page.getByRole("button", { name: "Generate Forecast" })).toBeDisabled();
 });
 
@@ -48,7 +48,7 @@ test("shows a server error instead of inventing a forecast", async ({ page }) =>
   });
   await button.click();
 
-  await expect(page.getByRole("alert")).toContainText("Forecast service temporarily unavailable");
+  await expect(page.locator('p[role="alert"]')).toContainText("Forecast service temporarily unavailable");
   await expect(page.getByRole("heading", { name: "Match Outcome Probabilities" })).toHaveCount(0);
 });
 
