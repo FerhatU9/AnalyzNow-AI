@@ -21,10 +21,10 @@ def load_matches_from_database(as_of: date) -> list[Match]:
         raise ValueError("POSTGRES_PASSWORD is missing")
 
     with psycopg.connect(
-        host="127.0.0.1",
-        port=5433,
-        dbname="analyznow",
-        user="analyznow",
+        host=os.getenv("POSTGRES_HOST", "127.0.0.1"),
+        port=int(os.getenv("POSTGRES_PORT", "5433")),
+        dbname=os.getenv("POSTGRES_DB", "analyznow"),
+        user=os.getenv("POSTGRES_USER", "analyznow"),
         password=password,
         connect_timeout=5,
     ) as connection:

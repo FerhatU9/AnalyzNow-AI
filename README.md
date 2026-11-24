@@ -31,7 +31,7 @@ The current Poisson model uses **historical final scores**, not a full expected-
 - **Data:** PostgreSQL 17, Psycopg, SQL, Docker Compose, OpenFootball historical results.
 - **Frontend:** Next.js, React, TypeScript, Tailwind CSS.
 - **Market data:** The Odds API, bookmaker margin normalization and multi-bookmaker summaries.
-- **Engineering:** Git, GitHub Actions workflow, documented source provenance and automated checks.
+- **Engineering:** Git, GitHub Actions, full-stack Docker image and Compose configuration (pending container integration verification), documented source provenance and automated checks.
 
 Refer to [System Architecture](docs/ARCHITECTURE.md), [Development Roadmap](docs/ROADMAP.md), [Model Quality](docs/MODEL_QUALITY.md), [Technical Research](docs/RESEARCH.md) and [Contribution Standards](CONTRIBUTING.md). Documentation is reviewed alongside each verified feature milestone; roadmap status is not changed until tests and evidence support it.
 
@@ -52,6 +52,19 @@ The images below show a **local demonstration with fictional teams and match dat
 **Data Health:** the separate dashboard reports historical match coverage, the latest eligible match date and the data-freshness status.
 
 ![Data Health dashboard showing a synthetic historical dataset](docs/images/data-health.png)
+
+## Full-stack Docker demonstration
+
+A separate containerized environment runs **PostgreSQL, a fictional-data loader, FastAPI and Next.js** without modifying the historical database or the original `compose.yaml`. Use Docker Desktop and a local `.env` with `POSTGRES_PASSWORD` configured:
+
+```powershell
+docker compose -f compose.demo.yaml up --build -d --wait
+docker compose -f compose.demo.yaml ps
+```
+
+Open http://127.0.0.1:3011 and confirm the team source is labeled **Synthetic demonstration data**. The application should show fictional Demo clubs, not real betting forecasts. Stop with `docker compose -f compose.demo.yaml down` (without `-v`). See [Container Deployment](docs/CONTAINER_DEPLOYMENT.md) for safe first-run setup, verification, limits and troubleshooting.
+
+The Docker environment is a proposed reproducible engineering workflow; the pull request's container CI and local execution must pass before calling it verified.
 
 ## Local development (Windows)
 

@@ -36,6 +36,8 @@ def _data_source() -> str:
 def _dataset_label() -> str:
     source = _data_source()
     if source == "postgres":
+        if os.getenv("FOOTBALL_DEMO_DATASET") == "1" and os.getenv("POSTGRES_DB") == "analyznow_demo":
+            return "Synthetic demonstration data"
         return "Configured PostgreSQL match results"
     if source == "csv":
         path = os.getenv("FOOTBALL_CSV_PATH", "")

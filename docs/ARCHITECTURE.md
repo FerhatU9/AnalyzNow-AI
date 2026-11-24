@@ -22,6 +22,12 @@ flowchart TD
 
 **Important boundary:** The current market odds API is separate from the historical statistical forecasts. The dashboard does not yet contain a live-odds section, and the system does not blend their probabilities.
 
+## Container demonstration (under integration verification)
+
+A separate `compose.demo.yaml` starts a dedicated PostgreSQL database, a one-time guarded loader for the fictional CSV, a FastAPI service, and a Next.js server. The dashboard communicates with FastAPI using `http://api:9011`; FastAPI uses PostgreSQL's internal hostname `postgres:5432`. The database has its own Docker volume and does not share the historical-data Compose project's storage. API and UI endpoints bind to loopback ports 9011 and 3011. See [Container Deployment](CONTAINER_DEPLOYMENT.md).
+
+The production-hosting architecture is not implemented. Container integration will be marked verified only after real Docker build, startup and HTTP smoke checks pass.
+
 ## Data model
 
 `teams` stores a unique club name and generated identifier. `matches` stores the fixture date, references to the home and away clubs, and completed match scores. Uniqueness and nonnegative-score constraints help maintain integrity. The database currently represents completed results, not fixtures with kickoff timestamps, source revisions or multiple competitions.

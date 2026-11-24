@@ -93,7 +93,14 @@ def verify() -> None:
         raise AssertionError(f"Outcome probabilities do not sum to one: {total}")
 
     print("Synthetic demo smoke test passed: Python API -> Next.js proxies -> forecast")
-    print("Fictional teams and dataset provenance verified; no database or external provider used.")
+    health = request_json(API_URL + "/health")
+    source = health.get("data_source")
+    if source not in ("csv", "postgres"):
+        raise AssertionError(f"Unexpected API data source: {source!r}")
+    if health.get("configured") is not True:
+        raise AssertionError("Configured data source is not ready")
+    print(f"Fictional data provenance verified; API source: {source}.")
+    print("No external bookmaker or football-data provider was used.")
 
 
 if __name__ == "__main__":
