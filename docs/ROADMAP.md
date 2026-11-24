@@ -26,6 +26,12 @@ Every completed milestone is accompanied by documentation changes in the same pu
 - **Verified 2026-11-24:** Docker images built; isolated PostgreSQL initialized; FastAPI and Next.js became healthy; GitHub Actions container integration and developer-local synthetic HTTP verification passed. The existing historical-data Compose project and its volumes were left untouched. This establishes reproducible local container behavior, not production readiness.
 - **Next:** Playwright browser tests, then the separate public GitHub publication decision, followed by Azure deployment and a source-grounded LangGraph analysis workflow.
 
+## GitHub Pages portfolio showcase
+
+- **Implemented on a dedicated branch:** interactive static forecasting website with six fictional clubs, 100 published synthetic results, independent-Poisson probabilities, responsive design and source/data limitations clearly disclosed.
+- **Acceptance pending:** JavaScript syntax verification, deterministic checks of browser/Python model equivalence, clean CI, branch merge, repository-owner activation of GitHub Pages from `main /docs`, and verification of the actual public URL.
+- **Hosting boundary:** GitHub Pages does not operate the Python API, PostgreSQL or Next.js service. The separate Azure Container Apps deployment remains optional for a future hosted full-stack demo.
+
 ## Azure portfolio website
 
 - **Prepared on dedicated branch:** manually published GitHub Container Registry images, Azure CLI deployment script that requires explicit cost confirmation, internal FastAPI service and public Next.js website with fictional data only.
