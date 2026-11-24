@@ -22,6 +22,10 @@ flowchart TD
 
 **Important boundary:** The current market odds API is separate from the historical statistical forecasts. The dashboard does not yet contain a live-odds section, and the system does not blend their probabilities.
 
+## Hosted portfolio demonstration (not yet deployed)
+
+The planned Azure Container Apps layout separates the public Next.js website from an internal-only FastAPI service in the same Container Apps environment. The API reads `data/synthetic_demo.csv` and runs with `ANALYZNOW_PUBLIC_DEMO=1` so bookmaker odds cannot be requested. No hosted PostgreSQL instance is needed. An explicit, manually approved GitHub Container Registry image publishing workflow produces fixed-source-revision images for cloud deployment. The proposed stack remains **unverified in Azure** until a real live URL and full HTTP demonstration are tested. See [Azure Deployment](AZURE_DEPLOYMENT.md).
+
 ## Container demonstration (under integration verification)
 
 A separate `compose.demo.yaml` starts a dedicated PostgreSQL database, a one-time guarded loader for the fictional CSV, a FastAPI service, and a Next.js server. The dashboard communicates with FastAPI using `http://api:9011`; FastAPI uses PostgreSQL's internal hostname `postgres:5432`. The database has its own Docker volume and does not share the historical-data Compose project's storage. API and UI endpoints bind to loopback ports 9011 and 3011. See [Container Deployment](CONTAINER_DEPLOYMENT.md).
