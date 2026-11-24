@@ -53,6 +53,10 @@ The images below show a **local demonstration with fictional teams and match dat
 
 ![Data Health dashboard showing a synthetic historical dataset](docs/images/data-health.png)
 
+## Hosted demonstration (deployment prepared)
+
+A **synthetic-data-only live website** is being prepared for Microsoft Azure Container Apps. The planned site hosts Next.js publicly and connects it to an internal FastAPI service that reads only the fictional CSV, not the developer's local PostgreSQL database. The API disables live bookmaker requests when `ANALYZNOW_PUBLIC_DEMO=1`. **No live website is deployed or verified yet**; do not use a placeholder URL. See [Azure Deployment](docs/AZURE_DEPLOYMENT.md) for the explicit-cost, opt-in hosting procedure and acceptance checks.
+
 ## Full-stack Docker demonstration
 
 A separate containerized environment runs **PostgreSQL, a fictional-data loader, FastAPI and Next.js** without modifying the historical database or the original `compose.yaml`. Use Docker Desktop and a local `.env` with `POSTGRES_PASSWORD` configured:
