@@ -13,6 +13,7 @@ AnalyzNow AI is a football research application that turns historical match resu
 | Historical Premier League data ingestion and source snapshots | Four seasons (2021/22–2024/25) imported to the local PostgreSQL example; five seasons (2021/22–2025/26) evaluated in separate local research snapshots |
 | PostgreSQL storage and SQL queries | Implemented; 1,520 match records across 26 clubs in the local dataset |
 | Independent-Poisson forecasting model | Implemented; expected goals, match outcome and goal-market probabilities |
+| Forecast data transparency | Forecast responses show latest eligible match, age, historical sample size and explicit stale/low-data warnings |
 | Walk-forward historical evaluation | Implemented; Poisson, Elo and 50/50 ensemble compared across 2024/25 and 2025/26 (380 fixtures per season); later-season settings were fixed in advance |
 | FastAPI forecasting endpoint | Implemented and exercised with PostgreSQL data |
 | Next.js interactive forecasting dashboard | Historical/synthetic forecasting and dataset-aware team selectors implemented; separate Model Quality page and navigation added in draft PR #8 |
@@ -134,6 +135,12 @@ npm.cmd run dev -- --hostname 127.0.0.1 --port 3011
 ```
 
 Open [AnalyzNow AI dashboard](http://127.0.0.1:3011). The team selector reflects the configured data source. Keep the PostgreSQL container and FastAPI terminal running when using the historical database, or follow the synthetic demo guide instead.
+
+## Forecast freshness and limitations
+
+The forecast dashboard now shows a per-request **Data freshness and coverage** panel. The backend calculates this from completed matches strictly before the selected cutoff date, reports the latest eligible match and count, and warns when the latest match is more than **90 days** before the cutoff. It also surfaces low-data and unseen-team limitations. The 90-day threshold is a transparency heuristic, **not** evidence of forecast accuracy or a guarantee that newer results are reliable.
+
+These indicators neither download current results nor modify forecast probabilities. In particular, a recent cutoff with old historical data remains an old-data forecast. See the `data_quality` object returned by `POST /v1/forecast`.
 
 ## API overview
 
