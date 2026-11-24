@@ -29,7 +29,7 @@ Every completed milestone is accompanied by documentation changes in the same pu
 ## GitHub Pages portfolio showcase
 
 - **Implemented on a dedicated branch:** interactive static forecasting website with six fictional clubs, 100 published synthetic results, independent-Poisson probabilities, responsive design and source/data limitations clearly disclosed.
-- **Acceptance pending:** JavaScript syntax verification, deterministic checks of browser/Python model equivalence, clean CI, branch merge, repository-owner activation of GitHub Pages from `main /docs`, and verification of the actual public URL.
+- **Completed 2026-11-24:** JavaScript syntax and browser/Python model parity checks passed; CI and security checks passed; GitHub Pages was published from `main /docs`. The owner provided browser screenshots confirming the live homepage, fictional forecast lab, probability output and other showcase sections.
 - **Hosting boundary:** GitHub Pages does not operate the Python API, PostgreSQL or Next.js service. The separate Azure Container Apps deployment remains optional for a future hosted full-stack demo.
 
 ## Azure portfolio website
