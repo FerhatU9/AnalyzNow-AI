@@ -172,6 +172,8 @@ def predict(payload: ForecastRequest) -> dict:
 @app.get("/v1/market-odds")
 def get_market_odds() -> dict:
     """Return current Premier League bookmaker probabilities."""
+    if os.getenv("ANALYZNOW_PUBLIC_DEMO") == "1":
+        raise HTTPException(status_code=404, detail="Not available in the public demonstration")
     try:
         fixtures = fetch_premier_league_odds()
         return {

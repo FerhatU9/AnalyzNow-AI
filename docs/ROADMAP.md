@@ -26,6 +26,12 @@ Every completed milestone is accompanied by documentation changes in the same pu
 - **Verified 2026-11-24:** Docker images built; isolated PostgreSQL initialized; FastAPI and Next.js became healthy; GitHub Actions container integration and developer-local synthetic HTTP verification passed. The existing historical-data Compose project and its volumes were left untouched. This establishes reproducible local container behavior, not production readiness.
 - **Next:** Playwright browser tests, then the separate public GitHub publication decision, followed by Azure deployment and a source-grounded LangGraph analysis workflow.
 
+## Azure portfolio website
+
+- **Prepared on dedicated branch:** manually published GitHub Container Registry images, Azure CLI deployment script that requires explicit cost confirmation, internal FastAPI service and public Next.js website with fictional data only.
+- **Acceptance pending:** successful CI and security checks, actual Azure subscription/hosting setup, review of resource costs, public website validation and a real HTTPS URL in GitHub About. No website is live until those checks pass.
+- **Public-demo safeguard:** `ANALYZNOW_PUBLIC_DEMO=1` disables bookmaker odds retrieval; hosted backend uses the committed synthetic CSV rather than private external or historical data.
+
 ## API observability
 
 - **Implemented on feature branch:** generated per-request correlation IDs, structured route-only JSON access logs, local opt-in OpenTelemetry spans and privacy-oriented middleware tests.

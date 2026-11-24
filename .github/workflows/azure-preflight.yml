@@ -1,0 +1,35 @@
+name: Azure Deployment Preflight
+
+on:
+  pull_request:
+    paths:
+      - "scripts/deploy_azure_demo.ps1"
+      - ".github/workflows/publish-demo-images.yml"
+      - ".github/workflows/azure-preflight.yml"
+      - "docs/AZURE_DEPLOYMENT.md"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Validate deployment script syntax
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Parse PowerShell without touching Azure
+        shell: pwsh
+        run: |
+          $tokens = $null
+          $errors = $null
+          [System.Management.Automation.Language.Parser]::ParseFile(
+            (Resolve-Path "scripts/deploy_azure_demo.ps1").Path,
+            [ref]$tokens,
+            [ref]$errors
+          ) | Out-Null
+          if ($errors.Count -gt 0) {
+            $errors | ForEach-Object { Write-Error $_.Message }
+            exit 1
+          }
+          Write-Host "Azure deployment script syntax is valid. No Azure resources were created."
