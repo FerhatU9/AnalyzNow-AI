@@ -50,7 +50,7 @@ def fetch_bytes(url: str) -> bytes:
     """Only allow-listed official raw paths; the source branch is not commit-pinned."""
     if not re.fullmatch(re.escape(RAW_ORIGIN) + r"/20\d{2}-\d{2}/en\.1\.json", url):
         raise ValueError("Only pinned OpenFootball Premier League source paths are permitted")
-    request = Request(url, headers={"User-Agent": "AnalysNowAI-educational-research/0.2"})
+    request = Request(url, headers={"User-Agent": "AnalyzNowAI-research/0.2"})
     with urlopen(request, timeout=25) as response:
         payload = response.read(MAX_FILE_SIZE + 1)
     if len(payload) > MAX_FILE_SIZE:
@@ -151,7 +151,7 @@ def import_seasons(raw_seasons: dict[str, bytes], *, destination: Path, as_of: d
     csv_path = destination / "processed" / f"{slug}.csv"
     manifest_path = destination / "manifest.json"
     manifest = {
-        "product": "AnalysNow AI",
+        "product": "AnalyzNow AI",
         "provider": "openfootball/football.json",
         "provider_repository": REPO_URL,
         "provider_license": "CC0-1.0 (repository declaration; review if source changes)",
