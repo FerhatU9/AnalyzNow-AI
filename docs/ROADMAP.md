@@ -26,6 +26,12 @@ Every completed milestone is accompanied by documentation changes in the same pu
 - **Verified 2026-11-24:** Docker images built; isolated PostgreSQL initialized; FastAPI and Next.js became healthy; GitHub Actions container integration and developer-local synthetic HTTP verification passed. The existing historical-data Compose project and its volumes were left untouched. This establishes reproducible local container behavior, not production readiness.
 - **Next:** Playwright browser tests, then the separate public GitHub publication decision, followed by Azure deployment and a source-grounded LangGraph analysis workflow.
 
+## Browser testing
+
+- **Locally verified 2026-11-24:** Four Chromium Playwright tests passed against the isolated Docker application for forecast generation, two backend-failure scenarios, and Data Health/Model Quality navigation.
+- **Acceptance pending:** dedicated GitHub Actions browser workflow must run and pass on the final pull-request head; no broader browser compatibility or accessibility compliance is claimed.
+- **Following milestone:** public-source GitHub review and explicit approval, then Azure hosting and evidence-grounded LangGraph workflows.
+
 ## Immediate development priorities
 
 1. Complete manual repository-history, secrets, data-rights and security review before changing repository visibility, including scrutiny of other branches and pull-request history.
