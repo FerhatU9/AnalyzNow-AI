@@ -23,7 +23,7 @@ Every completed milestone is accompanied by documentation changes in the same pu
 ## Container integration
 
 - **Implemented on a dedicated feature branch:** separate synthetic demonstration Compose project, FastAPI and Next.js Docker images, a guarded database seeder, environment-configurable PostgreSQL connections, and GitHub Actions container verification.
-- **Acceptance pending:** successful image builds, isolated PostgreSQL initialization, Python/API/Next.js HTTP smoke test, passing GitHub Actions and local Docker Desktop verification. Existing historical-data volumes must remain unchanged.
+- **Verified 2026-11-24:** Docker images built; isolated PostgreSQL initialized; FastAPI and Next.js became healthy; GitHub Actions container integration and developer-local synthetic HTTP verification passed. The existing historical-data Compose project and its volumes were left untouched. This establishes reproducible local container behavior, not production readiness.
 - **Next:** Playwright browser tests, then the separate public GitHub publication decision, followed by Azure deployment and a source-grounded LangGraph analysis workflow.
 
 ## Immediate development priorities
