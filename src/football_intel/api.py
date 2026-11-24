@@ -16,6 +16,7 @@ from pydantic import BaseModel, Field
 from .data import Match, load_matches, teams_in
 from .database import load_matches_from_database
 from .market_odds import fetch_premier_league_odds
+from .forecast_quality import forecast_provenance
 from .model import forecast, train
 
 load_dotenv()
@@ -102,6 +103,13 @@ def predict(payload: ForecastRequest) -> dict:
         matches = _load_configured_matches(as_of)
         model = train(matches, as_of)
         result = forecast(model, payload.home_team, payload.away_team)
+        result["data_quality"] = forecast_provenance(
+            matches,
+            as_of,
+            home_team=payload.home_team,
+            away_team=payload.away_team,
+            diagnostics=result["diagnostics"],
+        )
         result["dataset_label"] = _dataset_label()
         if result["dataset_label"] == "Synthetic demonstration data":
             result["notice"] = (
