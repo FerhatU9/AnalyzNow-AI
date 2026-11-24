@@ -27,3 +27,8 @@ frontend/.turbo/
 # Local database backups
 *.dump
 *.backup
+
+# Playwright browser-test outputs
+frontend/playwright-report/
+frontend/test-results/
+frontend/blob-report/
