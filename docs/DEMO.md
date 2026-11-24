@@ -45,6 +45,8 @@ The team selectors should show fictional clubs such as Demo City and Demo East. 
 
 **Observed local test (2026-11-23):** Demo City vs Demo East rendered successfully with 1.60/1.00 expected goals, 51.3% home-win, 25.0% draw and 23.7% away-win probabilities. The synthetic-data warning was visible. This result demonstrates browser/API integration in the developer's environment. On **2026-11-24**, the developer independently cloned `research/elo-evaluation` into `AnalyzNow_Review`, installed Python and npm dependencies, ran FastAPI at `127.0.0.1:9021` and Next.js at `127.0.0.1:3021` using only the synthetic CSV, and confirmed the same forecast in the browser. The `/model-quality` page also rendered. A separately run `scripts/verify_demo.py --api-url http://127.0.0.1:9021 --web-url http://127.0.0.1:3021` passed. This verifies a separate local checkout on the same computer; it does not reproduce external-data research or prove production deployment readiness.
 
+The forecast panel shows an informational freshness warning when historical match data is more than 90 days old relative to the selected cutoff. The `/data-health` page provides a separate on-demand dataset freshness summary; with FastAPI unavailable, it displays a connection error instead of cached match data. These pages use the fictional data in this demonstration, not current results.
+
 The live bookmaker-odds panel is developed on a separate feature branch and requires its own integration checks and provider credentials. No live bookmaker data is part of this demo.
 
 ## Verification
