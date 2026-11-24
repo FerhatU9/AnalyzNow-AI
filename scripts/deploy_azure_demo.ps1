@@ -38,7 +38,7 @@ if (-not (Get-Command az -ErrorAction SilentlyContinue)) {
     throw "Install the Azure CLI, sign in with 'az login', and choose your Azure subscription."
 }
 
-Invoke-Azure @("account", "show", "--query", "{name:name,id:id}", "-o", "table")
+Invoke-Azure -Arguments @("account", "show", "--query", "{name:name,id:id}", "-o", "table")
 Write-Host "Review the Azure subscription above before continuing. Use 'az account set' to change it." -ForegroundColor Yellow
 $answer = Read-Host "Type DEPLOY to create Azure resources on this subscription"
 if ($answer -cne "DEPLOY") {
@@ -58,7 +58,7 @@ foreach ($image in @($apiImage, $webImage)) {
     }
 }
 
-Invoke-Azure @("extension", "add", "--name", "containerapp", "--upgrade", "--yes")
+Invoke-Azure -Arguments @("extension", "add", "--name", "containerapp", "--upgrade", "--yes")
 
 # Refuse to modify an existing application; this is a one-time deployment guide.
 $existingGroup = & az group exists --name $ResourceGroup
@@ -71,15 +71,15 @@ if ($existingGroup.Trim() -eq "true") {
     }
 }
 
-Invoke-Azure @("group", "create", "--name", $ResourceGroup, "--location", $Location, "-o", "none")
+Invoke-Azure -Arguments @("group", "create", "--name", $ResourceGroup, "--location", $Location, "-o", "none")
 
 $envFound = & az containerapp env list --resource-group $ResourceGroup --query "[?name=='$EnvironmentName'].name" -o tsv
 if ($LASTEXITCODE -ne 0) { throw "Unable to inspect Container Apps environments." }
 if (-not $envFound) {
-    Invoke-Azure @("containerapp", "env", "create", "--name", $EnvironmentName, "--resource-group", $ResourceGroup, "--location", $Location, "-o", "none")
+    Invoke-Azure -Arguments @("containerapp", "env", "create", "--name", $EnvironmentName, "--resource-group", $ResourceGroup, "--location", $Location, "-o", "none")
 }
 
-Invoke-Azure @(
+Invoke-Azure -Arguments @(
     "containerapp", "create",
     "--name", $apiName,
     "--resource-group", $ResourceGroup,
@@ -98,7 +98,7 @@ Invoke-Azure @(
     "-o", "none"
 )
 
-Invoke-Azure @(
+Invoke-Azure -Arguments @(
     "containerapp", "create",
     "--name", $webName,
     "--resource-group", $ResourceGroup,
