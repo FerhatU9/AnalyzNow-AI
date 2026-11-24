@@ -24,6 +24,8 @@ Both use live vulnerability databases, which means results may change without co
 - [ ] If any credential was ever exposed, rotate it at the provider first. Removing or rewriting Git history alone does not invalidate a compromised credential.
 - [ ] Check local/generated outputs and historical dataset redistribution permissions.
 
+**Public visibility caveat:** GitHub repository visibility applies to the repository, not just `main`. Public branches, commit history and pull request discussions can expose unmerged work such as draft market PR #5. All reachable history and non-default branches must be included in the manual release review; do not assume that keeping a PR unmerged makes it confidential after publication.
+
 ## Branch and publication controls
 
 - [ ] Protect `main` against deletion and force pushes; require passing `Python tests`, `Frontend checks`, `Full-stack synthetic demo`, and both dependency-audit jobs before merging.
