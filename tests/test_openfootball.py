@@ -61,6 +61,7 @@ def test_import_creates_verifiable_snapshot(tmp_path):
     destination = tmp_path / "snapshot"
     result = of.import_seasons({"2023-24": sample()}, destination=destination, as_of=date(2023, 8, 14))
     assert result["total_completed_matches"] == 2
+    assert result["product"] == "AnalyzNow AI"
     assert Path(result["full_csv_path"]).is_file()
     assert len(load_matches(result["full_csv_path"])) == 2
     assert of.verify_snapshot(destination)["verified"] is True

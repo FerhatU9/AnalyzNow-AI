@@ -5,13 +5,13 @@ This roadmap distinguishes **locally verified work** from work still under devel
 | Workstream | Current result | Next acceptance gate |
 | --- | --- | --- |
 | Environment and tooling | Python, Node.js, Docker, VS Code and Git configured locally | Setup reproducible from a clean checkout |
-| Historical data ingestion | Four completed EPL seasons downloaded and imported; 1,520 results stored | Source provenance review and independent score sampling |
-| Forecasting baseline | Weighted independent-Poisson model working; walk-forward evaluation on 760 fixtures | Calibration analysis, stronger baselines and leakage review |
+| Historical data ingestion | Four EPL seasons restored to local PostgreSQL (1,520 results); separate five-season OpenFootball snapshot used for later-season research | Independently reproduce source snapshot and verify data-use rights |
+| Forecasting baseline | Poisson walk-forward model retained for application forecasts; Elo and 50/50 ensemble benchmarked on 2024/25 and frozen-config 2025/26 results (380 each) in draft PR #8 | Independently reproduce research journals; do not promote ensemble without convincing validation |
 | PostgreSQL integration | Renamed local PostgreSQL database restored from backup with 1,520 matches confirmed | Re-run database-dependent tests and verify FastAPI and frontend against the migrated database |
-| API and dashboard | Historical forecasting and dataset-aware synthetic demo verified locally in browser (39 CI Python tests and frontend build passing); full-stack HTTP smoke test passing on clean GitHub runner; independent fresh browser walkthrough outstanding | Independently verify browser interactions, add frontend tests and accessibility audit |
-| Market data | Live EPL odds retrieval and `/v1/market-odds` endpoint; 35 standard tests passed | Store timestamped odds and build dashboard display |
+| API and dashboard | Synthetic forecasting and dataset-aware team selectors; Model Quality dashboard and navigation in draft PR #8; full-stack smoke, lint and build passed CI for the research branch | Validate clean-checkout browser behavior, data-page refresh and accessibility |
+| Market data | On-demand EPL odds endpoint and margin normalization; separate market-dashboard feature is draft PR #5 (not merged) | Verify integration, error handling and provider licensing before any merge or public exposure |
 | Model-versus-market comparison | Not implemented | Exact fixture matching and point-in-time data alignment |
-| GitHub and CI | Private repository, with Python and frontend CI jobs passing on the branding branch | Confirm safe database migration, review secrets and keep documentation current |
+| GitHub and CI | Private repo; draft PR #8 passed Python, frontend, full-stack demo, Python/npm dependency audits and Gitleaks on its initial code head | Recheck CI after documentation edits, review data rights and reconcile open PRs before public release |
 | Verified news and RAG | Not implemented | Source licensing, fact verification and retrieval benchmark |
 | AI match analysis | Not implemented | Grounded summaries with audited citations and fixed model probabilities |
 | Deployment and operations | Not implemented | Authentication, security, monitoring, backups and licensing review |
@@ -22,16 +22,16 @@ Every completed milestone is accompanied by documentation changes in the same pu
 
 ## Immediate development priorities
 
-1. Maintain clean, current documentation and reviewed Git commits.
-2. Add the bookmaker-odds endpoint to the Next.js dashboard without mixing incompatible prediction dates.
-3. Verify dataset-aware team selectors and the no-credentials synthetic demo on a clean checkout.
-4. Record bookmaker source, event ID, timestamps and odds snapshots; ensure no stale or mismatched data drives comparisons.
-5. Update current match results and evaluate statistical-only, market-only and combined estimates on point-in-time historical snapshots.
-6. Introduce repeatable migrations, CI verification, frontend tests and clearer API contracts.
+1. Reproduce the Model Quality research reports from a clean external-data snapshot; retain provenance and avoid committing restricted data.
+2. Run an independent clean-checkout browser walkthrough for synthetic forecasting and the Model Quality page.
+3. Review both draft pull requests independently; keep the bookmaker panel separate from historical statistical forecasts.
+4. Complete repository-history, secrets, licensing and security review before making source code public.
+5. Add targeted frontend tests, accessibility checks and a documented model-monitoring refresh workflow.
+6. Develop time-aligned market/model comparisons only after acquiring properly licensed historical odds snapshots.
 
 ## Future research and engineering
 
-- Improve statistical forecasting with Elo, Dixon-Coles, xG features and rigorously evaluated ensemble candidates when suitable data rights permit.
+- Investigate calibration and stability of the evaluated Elo/Poisson ensemble; consider Dixon–Coles and xG only with robust out-of-sample evidence and appropriate data rights.
 - Add verified team news, player availability and contextual match intelligence.
 - Implement time-aware RAG, LangGraph-based research orchestration and source-grounded reports.
 - Add monitoring, model tracking, rate limits, authentication and secure hosting.

@@ -10,14 +10,15 @@ AnalyzNow AI is a football research application that turns historical match resu
 
 | Capability | Current status |
 | --- | --- |
-| Historical Premier League data ingestion and source snapshots | Implemented; four completed seasons imported locally |
+| Historical Premier League data ingestion and source snapshots | Four seasons (2021/22–2024/25) imported to the local PostgreSQL example; five seasons (2021/22–2025/26) evaluated in separate local research snapshots |
 | PostgreSQL storage and SQL queries | Implemented; 1,520 match records across 26 clubs in the local dataset |
 | Independent-Poisson forecasting model | Implemented; expected goals, match outcome and goal-market probabilities |
-| Walk-forward historical evaluation | Implemented; evaluated on 760 Premier League fixtures from 2023/24–2024/25 |
+| Walk-forward historical evaluation | Implemented; Poisson, Elo and 50/50 ensemble compared across 2024/25 and 2025/26 (380 fixtures per season); later-season settings were fixed in advance |
 | FastAPI forecasting endpoint | Implemented and exercised with PostgreSQL data |
-| Next.js interactive forecasting dashboard | Implemented locally; branch adds dataset-aware team selectors pending review |
+| Next.js interactive forecasting dashboard | Historical/synthetic forecasting and dataset-aware team selectors implemented; separate Model Quality page and navigation added in draft PR #8 |
 | Current bookmaker odds retrieval and margin normalization | Implemented; API endpoint and calculation tests passing |
-| Integrated model-versus-market dashboard | Planned; current odds are not yet matched to current-model forecasts |
+| Bookmaker odds dashboard | Separate draft PR #5; not merged into `main`. Current bookmaker odds are not time-aligned with the historical forecasting models |
+| Model benchmarking and diagnostics | Elo, ensemble, probability calibration, clustered uncertainty intervals and split-season diagnostics implemented for research in draft PR #8; active forecast remains Poisson | 
 | Verified team news, RAG, LangGraph match analysis | Planned |
 | Public deployment, authentication and production monitoring | Not yet implemented |
 
@@ -25,17 +26,17 @@ The current Poisson model uses **historical final scores**, not a full expected-
 
 ## Technology
 
-- **Backend and modelling:** Python, FastAPI, Pydantic, pytest, and standard Python statistical/numerical code.
+- **Backend and modelling:** Python, FastAPI, Pydantic, pytest, independent-Poisson forecasts, Elo ratings, walk-forward backtesting and exploratory model ensembles.
 - **Data:** PostgreSQL 17, Psycopg, SQL, Docker Compose, OpenFootball historical results.
 - **Frontend:** Next.js, React, TypeScript, Tailwind CSS.
 - **Market data:** The Odds API, bookmaker margin normalization and multi-bookmaker summaries.
 - **Engineering:** Git, GitHub Actions workflow, documented source provenance and automated checks.
 
-Refer to [System Architecture](docs/ARCHITECTURE.md), [Development Roadmap](docs/ROADMAP.md), [Technical Research](docs/RESEARCH.md) and [Contribution Standards](CONTRIBUTING.md). Documentation is reviewed alongside each verified feature milestone; roadmap status is not changed until tests and evidence support it.
+Refer to [System Architecture](docs/ARCHITECTURE.md), [Development Roadmap](docs/ROADMAP.md), [Model Quality](docs/MODEL_QUALITY.md), [Technical Research](docs/RESEARCH.md) and [Contribution Standards](CONTRIBUTING.md). Documentation is reviewed alongside each verified feature milestone; roadmap status is not changed until tests and evidence support it.
 
 ## Quick local demonstration
 
-For a no-credentials walkthrough using **fictional match data**, see [Reproducible Local Demo](docs/DEMO.md). It uses the included synthetic CSV and does **not** reproduce real-match evaluation or live bookmaker odds. The team selector and source-label changes passed automated CI; manual clean-checkout browser verification remains pending. See the [Public Release Checklist](docs/PUBLIC_RELEASE_CHECKLIST.md).
+For a no-credentials walkthrough using **fictional match data**, see [Reproducible Local Demo](docs/DEMO.md). It uses the included synthetic CSV and does **not** reproduce real-match evaluation or live bookmaker odds. The team selector and source-label changes passed automated CI. On 2026-11-24, the developer also verified a separate clean GitHub checkout in a fresh local folder: a synthetic forecast rendered in the browser, and the `/model-quality` page displayed the historical aggregates. See the [Public Release Checklist](docs/PUBLIC_RELEASE_CHECKLIST.md) for outstanding public-release gates.
 
 ## Local development (Windows)
 
@@ -51,7 +52,7 @@ py -3 -m venv .venv
 .\.venv\Scripts\python.exe -m pytest -q
 ```
 
-GitHub Actions passed **39 Python tests** and the frontend lint and production build on the reproducible-demo branch. Separately, the developer previously verified **2 PostgreSQL integration tests** with the restored local 1,520-match database. These results do not establish current-match predictive accuracy or deployment security.
+On draft PR #8, GitHub Actions passed Python tests, frontend lint/build, a full-stack synthetic demo, dependency audits, and reachable-history secret scanning. The developer also reported **79 local Python tests passed** and an independently rendered local Model Quality page. Separately, the developer previously verified **2 PostgreSQL integration tests** with the restored local 1,520-match database. CI does not reproduce the complete external-data research pipeline or verify all browser interactions.
 
 ### 2. Local configuration and PostgreSQL
 
@@ -143,7 +144,7 @@ Open [AnalyzNow AI dashboard](http://127.0.0.1:3011). The team selector reflects
 | `GET` | `/v1/teams` | List teams and the configured dataset label for the dashboard |
 | `GET` | `/v1/market-odds` | Retrieve current EPL bookmaker-implied market probabilities |
 
-Market odds access requires `ODDS_API_KEY` in the local `.env`. Run `python -m football_intel.market_odds` to inspect the provider response; this consumes provider API quota. The current dashboard displays statistical forecasts; the live market section is still being developed.
+Market odds access requires `ODDS_API_KEY` in the local `.env`. Run `python -m football_intel.market_odds` to inspect the provider response; this consumes provider API quota. The default-branch dashboard displays statistical forecasts. The live market dashboard is developed separately in draft PR #5; it is **not merged** into `main`.
 
 ## Testing and evaluation
 
@@ -160,7 +161,11 @@ For a historical evaluation:
 .\.venv\Scripts\python.exe -m football_intel backtest data\openfootball\epl_2021_2025\processed\epl_2021-22_2022-23_2023-24_2024-25.csv --min-training 380 --test-from 2023-08-01 --output outputs\epl_2023_2025_backtest.json
 ```
 
-A developer-local walk-forward evaluation on 760 Premier League matches reported a **multiclass Brier score of 0.579285**, compared with **0.646967** for a simple historical league-frequency baseline, and **log loss of 0.975758**, compared with **1.068422** for that baseline. These results have not yet been independently reproduced through CI or compared with stronger forecasting methods. They do not establish calibration, future performance, or betting profitability.
+Earlier local Poisson walk-forward testing across 760 Premier League matches reported a **multiclass Brier score of 0.579285**, compared with **0.646967** for a simple league-frequency baseline, and **log loss of 0.975758**, compared with **1.068422** for that baseline.
+
+Later local research in draft PR #8 evaluated Poisson, Elo and an equal-weight ensemble on **380 matches from 2024/25** (exploratory) and **380 from 2025/26** (parameters chosen in advance). In 2025/26, the respective Brier scores were **0.618784**, **0.627743** and **0.618067**. The ensemble's slight advantage over Poisson had uncertainty intervals including zero. **Poisson remains the application's active forecast model**; the 2025/26 result does not establish that the ensemble is reliably superior. See [Elo Evaluation](docs/ELO_EVALUATION.md), [Held-out Evaluation](docs/HELDOUT_EVALUATION.md) and [Model Quality](docs/MODEL_QUALITY.md).
+
+The new read-only `/model-quality` page displays validated **aggregate-only** metrics from the committed `frontend/data/model-quality.json`. For the complete fresh-download procedure, expected match counts, exact evaluation commands and aggregate comparison, see [Historical Model Reproducibility](docs/MODEL_REPRODUCIBILITY.md). On 24 November 2026, the developer independently fetched and verified fresh four- and five-season OpenFootball snapshots, reran the 2024/25 exploratory and 2025/26 later-season model comparisons, and reproduced the published summary scores. These results demonstrate historical reproducibility, not prospective predictive accuracy. The full research journals and external match data are not committed and are **not recreated by ordinary CI**. These results do not establish betting profitability or production forecasting reliability.
 
 ## Repository layout
 
@@ -181,14 +186,14 @@ AnalyzNow-AI/
 
 - The OpenFootball source repository declares its football results under CC0. Data provenance is retained locally; scores have not all been independently verified.
 - Live odds require an external provider API key and remain subject to provider usage and redistribution terms. Do not assume rights to republish commercial odds.
-- Historical results currently stop at the end of the 2024/25 Premier League season. They are **not current-form statistics** for upcoming fixtures.
+- The local forecasting/database example documents a 2021/22–2024/25 snapshot. Separate, locally downloaded 2025/26 match results were used in research evaluation; neither should be presented as current 2026/27 team-form evidence.
 - The independent-Poisson model does not yet account for injuries, suspensions, xG event data, tactical changes or correlated goal scores.
 - The application is a local research tool without public-user authentication, production security controls or deployment readiness.
 - Forecasts represent uncertainty and are **not betting recommendations or guarantees of profit**. No real-money betting functionality is provided.
 
 ## Project direction
 
-Planned work includes dynamic club selection, a market-data dashboard, time-matched statistical-versus-market comparisons, improved forecast evaluation, verified news, retrieval-augmented analysis, automated monitoring, and secure deployment. Each feature will be considered complete only when its tests and results can be independently checked. See the [Development Roadmap](docs/ROADMAP.md).
+Planned work includes merging reviewed market and model-quality branches, time-matched statistical-versus-market comparisons, stronger independent model validation, verified news, retrieval-augmented analysis, automated monitoring, and secure deployment. Each feature will be considered complete only when its tests and results can be independently checked. See the [Development Roadmap](docs/ROADMAP.md).
 
 ## License
 
