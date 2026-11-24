@@ -20,6 +20,12 @@ This roadmap distinguishes **locally verified work** from work still under devel
 
 Every completed milestone is accompanied by documentation changes in the same pull request. Update the main README for user-visible features and setup, architecture notes for component or API changes, data documentation for source/schema changes, and this roadmap for verified status and outstanding work. Record test results and limitations without calling unverified work complete. See [Contribution Standards](../CONTRIBUTING.md).
 
+## Container integration
+
+- **Implemented on a dedicated feature branch:** separate synthetic demonstration Compose project, FastAPI and Next.js Docker images, a guarded database seeder, environment-configurable PostgreSQL connections, and GitHub Actions container verification.
+- **Acceptance pending:** successful image builds, isolated PostgreSQL initialization, Python/API/Next.js HTTP smoke test, passing GitHub Actions and local Docker Desktop verification. Existing historical-data volumes must remain unchanged.
+- **Next:** Playwright browser tests, then the separate public GitHub publication decision, followed by Azure deployment and a source-grounded LangGraph analysis workflow.
+
 ## Immediate development priorities
 
 1. Complete manual repository-history, secrets, data-rights and security review before changing repository visibility, including scrutiny of other branches and pull-request history.
