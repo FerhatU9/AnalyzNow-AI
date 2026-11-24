@@ -124,5 +124,5 @@ def forecast(model: GoalModel, home: str, away: str, *, max_display_scores: int 
                           "under_2_5": round(1 - over_25, 6), "both_teams_score": round(btts, 6)},
         "top_scorelines": [{"score": f"{i}-{j}", "probability": round(p, 6)} for p, i, j in top[:max_display_scores]],
         "diagnostics": {**diagnostics, "truncated_score_mass": round(1 - mass, 12)},
-        "notice": "Research forecast, not a betting recommendation. Not validated on held-out real-world data.",
+        "notice": "Research forecast, not a betting recommendation. Historical backtests do not establish reliable current-match accuracy.",
     }

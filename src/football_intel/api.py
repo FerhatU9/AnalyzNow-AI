@@ -16,6 +16,7 @@ from pydantic import BaseModel, Field
 from .data import Match, load_matches, teams_in
 from .database import load_matches_from_database
 from .market_odds import fetch_premier_league_odds
+from .forecast_quality import forecast_provenance
 from .model import forecast, train
 
 load_dotenv()
@@ -93,6 +94,44 @@ def get_teams() -> dict:
     except (ValueError, OSError) as exc:
         raise HTTPException(status_code=503, detail="Match data is unavailable") from exc
 
+@app.get("/v1/data-health")
+def get_data_health() -> dict:
+    """Check whether historical football data is up to date."""
+    today = date.today()
+
+    try:
+        matches = _load_configured_matches(today)
+        historical = [m for m in matches if m.date < today]
+
+        if not historical:
+            raise HTTPException(
+                status_code=503,
+                detail="No completed historical matches available",
+            )
+
+        latest = max(m.date for m in historical)
+        days_old = (today - latest).days
+
+        return {
+            "dataset_label": _dataset_label(),
+            "historical_matches": len(historical),
+            "latest_match": latest.isoformat(),
+            "days_old": days_old,
+            "stale_after_days": 90,
+            "is_stale": days_old > 90,
+        }
+
+    except psycopg.Error as exc:
+        raise HTTPException(
+            status_code=503,
+            detail="Football database is unavailable",
+        ) from exc
+
+    except (ValueError, OSError) as exc:
+        raise HTTPException(
+            status_code=503,
+            detail="Historical match data is unavailable",
+        ) from exc
 
 @app.post("/v1/forecast")
 def predict(payload: ForecastRequest) -> dict:
@@ -102,6 +141,13 @@ def predict(payload: ForecastRequest) -> dict:
         matches = _load_configured_matches(as_of)
         model = train(matches, as_of)
         result = forecast(model, payload.home_team, payload.away_team)
+        result["data_quality"] = forecast_provenance(
+            matches,
+            as_of,
+            home_team=payload.home_team,
+            away_team=payload.away_team,
+            diagnostics=result["diagnostics"],
+        )
         result["dataset_label"] = _dataset_label()
         if result["dataset_label"] == "Synthetic demonstration data":
             result["notice"] = (

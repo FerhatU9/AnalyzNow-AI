@@ -25,6 +25,17 @@ type Forecast = {
   }[];
   notice?: string;
   dataset_label?: string;
+  data_quality?: {
+    latest_training_match: string;
+    days_since_latest_match: number;
+    historical_matches_used: number;
+    stale_after_days: number;
+    is_stale: boolean;
+    home_team_has_history: boolean;
+    away_team_has_history: boolean;
+    low_data_warning: boolean;
+    warnings: string[];
+  };
 };
 
 type TeamCatalog = { teams: string[]; dataset_label: string; last_match_date: string };
@@ -152,6 +163,14 @@ export default function Home() {
   >
     View Model Quality
   </Link>
+
+<Link
+  href="/data-health"
+  className="inline-flex rounded-lg border border-emerald-500/40 px-4 py-2 text-sm font-semibold text-emerald-300 hover:bg-emerald-500/10"
+>
+  View Data Health
+</Link>
+
   </nav>
 
         </header>
@@ -251,6 +270,38 @@ export default function Home() {
               <h2 className="mt-2 text-2xl font-bold">
                 {forecast.home_team} vs {forecast.away_team}
               </h2>
+
+              {forecast.data_quality && (
+                <div className="mt-5 rounded-xl border border-slate-700 bg-slate-800/60 p-4" aria-label="Forecast data quality">
+                  <h3 className="font-semibold">Data freshness and coverage</h3>
+                  <dl className="mt-3 grid gap-3 text-sm sm:grid-cols-2">
+                    <div>
+                      <dt className="text-slate-400">Latest eligible match</dt>
+                      <dd className="font-medium">{forecast.data_quality.latest_training_match}</dd>
+                    </div>
+                    <div>
+                      <dt className="text-slate-400">Age at cutoff</dt>
+                      <dd className="font-medium">{forecast.data_quality.days_since_latest_match} days</dd>
+                    </div>
+                    <div>
+                      <dt className="text-slate-400">Historical matches used</dt>
+                      <dd className="font-medium">{forecast.data_quality.historical_matches_used}</dd>
+                    </div>
+                    <div>
+                      <dt className="text-slate-400">Freshness status</dt>
+                      <dd className="font-medium">{forecast.data_quality.is_stale ? "Old historical data" : "Within 90-day threshold"}</dd>
+                    </div>
+                  </dl>
+                  {forecast.data_quality.warnings.length > 0 && (
+                    <div role="status" className="mt-4 rounded-lg border border-amber-700/60 bg-amber-950/40 p-3 text-sm text-amber-100">
+                      <p className="font-semibold">Data limitations</p>
+                      <ul className="mt-2 list-disc space-y-1 pl-5">
+                        {forecast.data_quality.warnings.map((warning) => <li key={warning}>{warning}</li>)}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              )}
 
               <h3 className="mt-6 font-semibold">Expected Goals</h3>
 
