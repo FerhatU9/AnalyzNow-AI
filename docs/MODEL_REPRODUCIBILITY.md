@@ -2,7 +2,7 @@
 
 This procedure reproduces the 2024/25 exploratory and 2025/26 later-season evaluations behind the AnalyzNow AI **Model Quality** page. It is separate from the synthetic browser demonstration in [DEMO.md](DEMO.md).
 
-**Status (2026-11-24):** The developer independently downloaded and SHA-256-verified a new five-season OpenFootball snapshot (1,900 matches), and reran the 2025/26 Poisson backtest and frozen Elo/ensemble comparison on it. All 2025/26 aggregate measures and uncertainty intervals matched previous results. The 2024/25 exploratory rerun from the newly verified source snapshot is still outstanding. Passing the normal GitHub Actions workflow does not execute these external-data research steps.
+**Status (2026-11-24):** The developer independently downloaded and SHA-256-verified a new five-season OpenFootball snapshot (1,900 matches), and reran the 2025/26 Poisson backtest and frozen Elo/ensemble comparison on it. All 2025/26 aggregate measures and uncertainty intervals matched previous results. The 2024/25 exploratory comparison was also rerun using a separately named four-season local snapshot and matched previously reported model scores. Four-season `verify-snapshot` confirmation was not shown in the latest screenshots, so its exact source hash verification remains an explicit follow-up. Passing the normal GitHub Actions workflow does not execute these external-data research steps.
 
 ## Requirements and data boundaries
 
@@ -33,6 +33,8 @@ Inspect `data/openfootball/epl_2021_2025/manifest.json` for source URLs, retriev
 ```
 
 These are **380** evaluated Premier League fixtures if the snapshot is complete. The Poisson forecasts are walk-forward by match date. The ensemble is a fixed 50% Elo / 50% Poisson blend; the 2024/25 model comparison is **exploratory**, not an untouched confirmation.
+
+**Local rerun evidence (2026-11-24):** The developer ran the Poisson backtest on `data/openfootball/epl_release_check_2025/processed/epl_2021-22_2022-23_2023-24_2024-25.csv` with `--min-training 760 --test-from 2024-08-01`, saving to `outputs/epl_release_check_2025_evaluation.json`. Running `scripts.evaluate_ensemble` against the same source and journal, saved separately to `outputs/ensemble_release_check_2025.json`, reproduced the previously reported 380 matches over 109 dates. Brier scores: Poisson **0.594368**, Elo **0.590903**, 50/50 ensemble **0.587464**; log losses **0.996779**, **0.990428**, **0.986054**; accuracy **52.1%**, **53.4%**, **52.6%**, respectively. The 95% interval for ensemble-minus-Poisson Brier difference was **[-0.015628, +0.001663]**, which includes zero. This screenshot proves a new run on the named snapshot but does not independently show the four-season `verify-snapshot` command output.
 
 Optional detail diagnostics: `.\.venv\Scripts\python.exe scripts\compare_elo.py` and `.\.venv\Scripts\python.exe scripts\evaluate_elo_uncertainty.py`.
 
