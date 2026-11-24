@@ -58,4 +58,4 @@ If your existing local API or dashboard already uses ports 9011 or 3011, stop th
 
 ## Verification status
 
-GitHub Actions is configured to build this Docker environment and run the existing synthetic demo smoke test. Until that workflow succeeds on the pull request and the developer confirms the local containers, the Docker deployment must be treated as **implemented but not verified**.
+**Verified 2026-11-24:** GitHub Actions successfully built and started the isolated container stack and passed the synthetic HTTP smoke test. The developer independently confirmed on Windows/Docker Desktop that PostgreSQL, FastAPI and Next.js reported healthy and that `python scripts/verify_demo.py` passed. An existing local API/UI port conflict was resolved by stopping the two previously running development servers; the existing historical database and other Docker services were not changed. This is local/demo readiness, **not** public hosting or production security verification.
