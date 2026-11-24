@@ -6,7 +6,6 @@ Never use this utility for a historical or production database.
 from __future__ import annotations
 
 import os
-from datetime import date
 from pathlib import Path
 
 import psycopg
@@ -66,25 +65,26 @@ def main() -> None:
             )
 
         team_ids = dict(connection.execute("SELECT name, id FROM teams").fetchall())
-        connection.executemany(
-            """
-            INSERT INTO matches (
-                match_date, home_team_id, away_team_id, home_goals, away_goals
-            ) VALUES (%s, %s, %s, %s, %s)
-            ON CONFLICT (match_date, home_team_id, away_team_id)
-            DO NOTHING
-            """,
-            [
-                (
-                    match.date,
-                    team_ids[match.home_team],
-                    team_ids[match.away_team],
-                    match.home_goals,
-                    match.away_goals,
-                )
-                for match in matches
-            ],
-        )
+        with connection.cursor() as cursor:
+            cursor.executemany(
+                """
+                INSERT INTO matches (
+                    match_date, home_team_id, away_team_id, home_goals, away_goals
+                ) VALUES (%s, %s, %s, %s, %s)
+                ON CONFLICT (match_date, home_team_id, away_team_id)
+                DO NOTHING
+                """,
+                [
+                    (
+                        match.date,
+                        team_ids[match.home_team],
+                        team_ids[match.away_team],
+                        match.home_goals,
+                        match.away_goals,
+                    )
+                    for match in matches
+                ],
+            )
         print(f"Seeded {len(matches)} fictional matches across {len(team_names)} demo clubs.")
 
 
