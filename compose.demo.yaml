@@ -1,0 +1,81 @@
+# Isolated local demonstration: this project and database volume are separate
+# from the historical-data PostgreSQL installation in compose.yaml.
+name: analyznow-ai-demo
+
+x-database-env: &database-env
+  POSTGRES_HOST: postgres
+  POSTGRES_PORT: "5432"
+  POSTGRES_DB: analyznow_demo
+  POSTGRES_USER: analyznow_demo
+  POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in your local .env}
+
+x-api-build: &api-build
+  context: .
+  dockerfile: docker/api.Dockerfile
+
+services:
+  postgres:
+    image: postgres:17
+    environment:
+      POSTGRES_DB: analyznow_demo
+      POSTGRES_USER: analyznow_demo
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in your local .env}
+    volumes:
+      - postgres_demo_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U analyznow_demo -d analyznow_demo"]
+      interval: 5s
+      timeout: 5s
+      retries: 15
+
+  seed:
+    build: *api-build
+    image: analyznow-demo-api:local
+    command: ["python", "scripts/seed_synthetic_demo.py"]
+    restart: "no"
+    environment:
+      <<: *database-env
+      FOOTBALL_DEMO_SEED: "1"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  api:
+    build: *api-build
+    image: analyznow-demo-api:local
+    environment:
+      <<: *database-env
+      FOOTBALL_DATA_SOURCE: postgres
+      FOOTBALL_DEMO_DATASET: "1"
+    ports:
+      - "127.0.0.1:9011:9011"
+    depends_on:
+      seed:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:9011/v1/teams', timeout=4)"]
+      interval: 5s
+      timeout: 5s
+      retries: 15
+      start_period: 10s
+
+  web:
+    build:
+      context: .
+      dockerfile: docker/frontend.Dockerfile
+    environment:
+      FOOTBALL_API_URL: http://api:9011
+    ports:
+      - "127.0.0.1:3011:3011"
+    depends_on:
+      api:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3011/api/teams').then(r => { if (!r.ok) process.exit(1) }).catch(() => process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 15
+      start_period: 15s
+
+volumes:
+  postgres_demo_data:
