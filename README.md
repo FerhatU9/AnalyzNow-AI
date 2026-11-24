@@ -36,7 +36,7 @@ Refer to [System Architecture](docs/ARCHITECTURE.md), [Development Roadmap](docs
 
 ## Quick local demonstration
 
-For a no-credentials walkthrough using **fictional match data**, see [Reproducible Local Demo](docs/DEMO.md). It uses the included synthetic CSV and does **not** reproduce real-match evaluation or live bookmaker odds. The team selector and source-label changes passed automated CI; manual clean-checkout browser verification remains pending. See the [Public Release Checklist](docs/PUBLIC_RELEASE_CHECKLIST.md).
+For a no-credentials walkthrough using **fictional match data**, see [Reproducible Local Demo](docs/DEMO.md). It uses the included synthetic CSV and does **not** reproduce real-match evaluation or live bookmaker odds. The team selector and source-label changes passed automated CI. On 2026-11-24, the developer also verified a separate clean GitHub checkout in a fresh local folder: a synthetic forecast rendered in the browser, and the `/model-quality` page displayed the historical aggregates. See the [Public Release Checklist](docs/PUBLIC_RELEASE_CHECKLIST.md) for outstanding public-release gates.
 
 ## Local development (Windows)
 
