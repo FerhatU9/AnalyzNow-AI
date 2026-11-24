@@ -41,6 +41,18 @@ For a no-credentials walkthrough using **fictional match data**, see [Reproducib
 
 The Data Health dashboard (`http://127.0.0.1:3011/data-health` when running locally) displays the configured dataset, historical match count, latest match date, and a warning when data is more than 90 days old. This threshold is informational, not a measure of predictive accuracy. The page reads the local FastAPI service on demand; an external monitoring service is not required.
 
+## Application screenshots
+
+The images below show a **local demonstration with fictional teams and match data**. They are not real-world predictions or evidence of forecasting accuracy.
+
+**Forecast transparency:** the match analysis screen displays the historical cutoff, eligible match count, data age and explicit stale-data warning.
+
+![Match analysis with synthetic-data and forecast freshness warnings](docs/images/forecast-freshness.png)
+
+**Data Health:** the separate dashboard reports historical match coverage, the latest eligible match date and the data-freshness status.
+
+![Data Health dashboard showing a synthetic historical dataset](docs/images/data-health.png)
+
 ## Local development (Windows)
 
 ### Requirements
