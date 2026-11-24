@@ -16,13 +16,13 @@ The goal of this checklist is a credible **public source-code portfolio**, not a
 
 ## Required before public visibility
 
-- [ ] Independently run the documented browser walkthrough from a fresh checkout. The full-stack HTTP workflow has passed CI on a clean runner, but manual browser interaction on a separate environment has not yet been verified.
+- [x] Independently run the synthetic browser walkthrough from a separate fresh checkout. On 2026-11-24, `AnalyzNow_Review` used FastAPI port 9021 and Next.js port 3021; browser screenshots showed the correct synthetic forecast (Demo City vs Demo East: expected goals 1.60/1.00 and 51.3%/25.0%/23.7% outcome probabilities) and the Model Quality page. This was a separate checkout on the same Windows computer, not an unrelated machine.
 - [ ] Verify the existing market dashboard feature separately against the real backend. Test successful data, empty fixtures, missing API key and provider failure without publishing licensed bookmaker data.
 - [ ] Review current branches **and reachable Git history** for API keys, PostgreSQL passwords, environment files, private outputs and unlicensed datasets. Gitleaks v8.30.1 completed a reachable-history scan of 46 commits (~854 KB) without findings on 2026-11-23; manual data/secret checks and unreachable-history considerations still remain. Git ignore rules alone do not remove earlier commits.
 - [x] On the initial research PR #8 head (`07b0782`), GitHub Actions dependency security completed successfully for Python and npm, and Gitleaks passed. These automated audits are not a comprehensive security review; recheck them after subsequent changes.
 - [ ] Complete manual review of credential history, licensed datasets, provider terms and other sensitive material beyond automated scanning.
 - [ ] Confirm upstream football data licenses and whether additional attribution, branding or redistribution restrictions apply to anything included publicly.
-- [ ] Validate a clean-checkout setup on a second machine or isolated environment, without reliance on a developer's existing PostgreSQL volume.
+- [x] Validate a clean checkout in an **isolated local folder** without relying on the existing PostgreSQL volume or API provider credentials. Both services ran against the synthetic CSV after a fresh Python/npm dependency installation; the independently run `verify_demo.py` script passed. A second physical machine has **not** been tested.
 - [ ] Ensure the main README matches the **merged** default branch and accurately labels all planned features. Draft PR #8 updates its descriptions; merge and recheck before public release.
 - [ ] Merge reviewed pull requests after required checks, rather than publishing code from an unmerged branch.
 - [ ] Review GitHub repository description, pinned topics, license, issue/reporting expectations and a real screenshot or short demonstration captured from a tested build.
@@ -39,4 +39,4 @@ The goal of this checklist is a credible **public source-code portfolio**, not a
 
 **Current decision: private; public portfolio approval pending the unchecked gates above.**
 
-Draft PR #8 contains the model-research and Model Quality milestones. Its original head passed full-stack HTTP CI, frontend checks, Python tests, dependency audits and history scanning. These checks must be reconfirmed for the latest documentation commits. Independent clean-checkout research regeneration, separate market-feature review, browser verification, and manual data-rights/secrets review remain outstanding.
+Draft PR #8 contains the model-research and Model Quality milestones. Its original head passed full-stack HTTP CI, frontend checks, Python tests, dependency audits and history scanning. These checks must be reconfirmed for the latest documentation commits. Independent clean-checkout **historical research regeneration**, separate market-feature review, and manual data-rights/secrets review remain outstanding. The separate synthetic browser walkthrough was completed on 2026-11-24.
