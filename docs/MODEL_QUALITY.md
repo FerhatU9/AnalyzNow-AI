@@ -4,6 +4,8 @@ The Model Quality page turns locally measured historical forecasting results int
 
 ## Data sources
 
+For the complete download-to-export procedure, including strict historical cutoffs, evaluation commands and comparison with the committed dashboard metrics, see [Historical Model Reproducibility](MODEL_REPRODUCIBILITY.md). That end-to-end reproduction has not yet been independently completed.
+
 Generate the reports using the existing research scripts:
 
 - `outputs/ensemble_evaluation.json` — 2024/25 exploratory Poisson, Elo and 50/50 ensemble comparison
