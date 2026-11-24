@@ -24,3 +24,8 @@ data/*.csv
 !data/synthetic_demo.csv
 *.log
 *.patch
+
+# Local browser-test traces and reports are not container inputs.
+frontend/test-results
+frontend/playwright-report
+frontend/blob-report
