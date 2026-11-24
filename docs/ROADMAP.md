@@ -26,6 +26,12 @@ Every completed milestone is accompanied by documentation changes in the same pu
 - **Verified 2026-11-24:** Docker images built; isolated PostgreSQL initialized; FastAPI and Next.js became healthy; GitHub Actions container integration and developer-local synthetic HTTP verification passed. The existing historical-data Compose project and its volumes were left untouched. This establishes reproducible local container behavior, not production readiness.
 - **Next:** Playwright browser tests, then the separate public GitHub publication decision, followed by Azure deployment and a source-grounded LangGraph analysis workflow.
 
+## API observability
+
+- **Implemented on feature branch:** generated per-request correlation IDs, structured route-only JSON access logs, local opt-in OpenTelemetry spans and privacy-oriented middleware tests.
+- **Acceptance pending:** standard CI, dependency security audits, container smoke tests and Chromium browser tests must pass at the final PR head.
+- **After publication:** connect safe telemetry to Azure monitoring only after reviewing access control, retention, costs and privacy. This local instrumentation is not a hosted monitoring product.
+
 ## Browser testing
 
 - **Locally verified 2026-11-24:** Four Chromium Playwright tests passed against the isolated Docker application for forecast generation, two backend-failure scenarios, and Data Health/Model Quality navigation.

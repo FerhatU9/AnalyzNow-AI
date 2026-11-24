@@ -18,9 +18,12 @@ from .database import load_matches_from_database
 from .market_odds import fetch_premier_league_odds
 from .forecast_quality import forecast_provenance
 from .model import forecast, train
+from .observability import RequestObservabilityMiddleware, configure_tracing
 
 load_dotenv()
 app = FastAPI(title="AnalyzNow AI", version="0.2.0")
+configure_tracing()
+app.add_middleware(RequestObservabilityMiddleware)
 
 
 class ForecastRequest(BaseModel):
