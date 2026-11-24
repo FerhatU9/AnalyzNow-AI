@@ -64,7 +64,11 @@ docker compose -f compose.demo.yaml ps
 
 Open http://127.0.0.1:3011 and confirm the team source is labeled **Synthetic demonstration data**. The application should show fictional Demo clubs, not real betting forecasts. Stop with `docker compose -f compose.demo.yaml down` (without `-v`). See [Container Deployment](docs/CONTAINER_DEPLOYMENT.md) for safe first-run setup, verification, limits and troubleshooting.
 
-The Docker environment is a proposed reproducible engineering workflow; the pull request's container CI and local execution must pass before calling it verified.
+The isolated Docker environment passed both GitHub Actions integration checks and developer-local synthetic HTTP tests on 2026-11-24. This verifies local demo behavior, not production deployment.
+
+## Browser end-to-end testing
+
+Four Playwright Chromium tests exercise the synthetic-data forecast, network failure handling, and dashboard navigation. All four passed locally on 2026-11-24 against the isolated Docker application. The dedicated GitHub Actions browser workflow must also pass before this feature is considered integrated. See [Browser Testing](docs/BROWSER_TESTING.md) for reproducible setup and its limitations.
 
 ## Local development (Windows)
 
