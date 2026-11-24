@@ -21,6 +21,7 @@ The goal of this checklist is a credible **public source-code portfolio**, not a
 - [ ] Review current branches **and reachable Git history** for API keys, PostgreSQL passwords, environment files, private outputs and unlicensed datasets. Gitleaks v8.30.1 completed a reachable-history scan of 46 commits (~854 KB) without findings on 2026-11-23; manual data/secret checks and unreachable-history considerations still remain. Git ignore rules alone do not remove earlier commits.
 - [x] On the initial research PR #8 head (`07b0782`), GitHub Actions dependency security completed successfully for Python and npm, and Gitleaks passed. These automated audits are not a comprehensive security review; recheck them after subsequent changes.
 - [ ] Independently run [Historical Model Reproducibility](MODEL_REPRODUCIBILITY.md) from a fresh OpenFootball snapshot; check the regenerated aggregate against the committed Model Quality JSON and investigate any mismatches.
+- [x] Regenerate the committed Model Quality **aggregate** from existing local research journals: on 2026-11-24 the developer ran `scripts/export_model_quality.py --output outputs/recomputed_model_quality.json` and compared parsed JSON with `frontend/data/model-quality.json`; result: **MATCH**, covering 760 historical match observations. This is **not** an independent fresh-download regeneration of the underlying model forecasts.
 - [ ] Complete manual review of credential history, licensed datasets, provider terms and other sensitive material beyond automated scanning.
 - [ ] Confirm upstream football data licenses and whether additional attribution, branding or redistribution restrictions apply to anything included publicly.
 - [x] Validate a clean checkout in an **isolated local folder** without relying on the existing PostgreSQL volume or API provider credentials. Both services ran against the synthetic CSV after a fresh Python/npm dependency installation; the independently run `verify_demo.py` script passed. A second physical machine has **not** been tested.
@@ -39,5 +40,7 @@ The goal of this checklist is a credible **public source-code portfolio**, not a
 ## Readiness decision
 
 **Current decision: private; public portfolio approval pending the unchecked gates above.**
+
+Latest observed PR #8 checks on 2026-11-24: Python/frontend/full-stack CI and Dependency Security completed successfully at head `1dd3579`. These statuses must be reconfirmed after subsequent commits.
 
 Draft PR #8 contains the model-research and Model Quality milestones. Its original head passed full-stack HTTP CI, frontend checks, Python tests, dependency audits and history scanning. These checks must be reconfirmed for the latest documentation commits. Independent clean-checkout **historical research regeneration**, separate market-feature review, and manual data-rights/secrets review remain outstanding. The separate synthetic browser walkthrough was completed on 2026-11-24.
