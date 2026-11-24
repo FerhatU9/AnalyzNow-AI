@@ -2,7 +2,7 @@
 
 This procedure reproduces the 2024/25 exploratory and 2025/26 later-season evaluations behind the AnalyzNow AI **Model Quality** page. It is separate from the synthetic browser demonstration in [DEMO.md](DEMO.md).
 
-**Status:** The developer previously ran the historical evaluations locally. This complete end-to-end reconstruction from a new historical-data download has **not yet been independently verified**. Passing the normal GitHub Actions workflow does not execute these steps.
+**Status (2026-11-24):** The developer independently downloaded and SHA-256-verified a new five-season OpenFootball snapshot (1,900 matches), and reran the 2025/26 Poisson backtest and frozen Elo/ensemble comparison on it. All 2025/26 aggregate measures and uncertainty intervals matched previous results. The 2024/25 exploratory rerun from the newly verified source snapshot is still outstanding. Passing the normal GitHub Actions workflow does not execute these external-data research steps.
 
 ## Requirements and data boundaries
 
@@ -45,6 +45,8 @@ Optional detail diagnostics: `.\.venv\Scripts\python.exe scripts\compare_elo.py`
 
 A complete five-season dataset contains **1,900** finished matches. It is a separate snapshot, not a PostgreSQL migration.
 
+**Verified independent local rerun (2026-11-24):** The developer downloaded a fresh copy to the non-overwriting `data/openfootball/epl_release_check_2026` folder. The importer reported `verified: true`, 1,900 completed matches, five seasons, 27 distinct club names, and processed CSV SHA-256 `dab0e9c6638bcf1808dbcb7ceed9787dac0fb4f16152d7d79c3ccf2e6d425776`. The downloaded snapshot is ignored by Git and is not included in repository commits.
+
 ## 4. Reproduce the 2025/26 later-season evaluation and drift report
 
 ```powershell
@@ -54,6 +56,8 @@ A complete five-season dataset contains **1,900** finished matches. It is a sepa
 ```
 
 The later-season model evaluation should contain **380 fixtures** with frozen Elo settings `K=32`, `home_advantage=40` and an equal-weight ensemble. A better score in one season does not prove future superiority. The drift report is descriptive, not evidence of a causal change.
+
+**Verified new-snapshot rerun (2026-11-24):** The developer reran the Poisson backtest with `--matches` input `data/openfootball/epl_release_check_2026/processed/epl_2021-22_2022-23_2023-24_2024-25_2025-26.csv`, `--min-training 760` and `--test-from 2025-08-01`, writing a new journal to `outputs/epl_release_check_evaluation.json`. The model reported 380 fixtures, Poisson Brier 0.618784 and log loss 1.031207. Passing that journal and the fresh match CSV to `scripts.evaluate_heldout` reproduced Elo Brier 0.627743, ensemble Brier 0.618067, and the published 95% paired intervals (ensemble minus Poisson Brier [-0.009735, +0.008487]). This confirms reproducibility for this **later season only**; no fresh-source 2024/25 evaluation was shown.
 
 ## 5. Rebuild and compare the aggregate dashboard report
 
