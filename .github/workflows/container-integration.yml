@@ -1,0 +1,43 @@
+name: Container Integration
+
+on:
+  pull_request:
+    paths:
+      - "compose.demo.yaml"
+      - ".dockerignore"
+      - "docker/**"
+      - "scripts/seed_synthetic_demo.py"
+      - "src/**"
+      - "database/schema.sql"
+      - "data/synthetic_demo.csv"
+      - "frontend/**"
+      - ".github/workflows/container-integration.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  synthetic-compose:
+    name: Build and verify isolated Docker demo
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      POSTGRES_PASSWORD: github_actions_fictional_demo_only
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate Docker Compose configuration
+        run: docker compose -f compose.demo.yaml config --quiet
+      - name: Start isolated demonstration stack
+        run: docker compose -f compose.demo.yaml up --build --detach --wait
+      - name: Verify FastAPI, Next.js and synthetic forecast
+        run: python scripts/verify_demo.py
+      - name: Shut down ephemeral test containers
+        if: always()
+        run: |
+          docker compose -f compose.demo.yaml ps || true
+          docker compose -f compose.demo.yaml logs --tail=75 || true
+          docker compose -f compose.demo.yaml down --remove-orphans --volumes || true
