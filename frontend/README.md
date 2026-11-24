@@ -29,6 +29,6 @@ Open http://127.0.0.1:3011.
 
 The interface provides dataset-aware home/away team selectors, a historical cutoff date, expected goals, match-outcome probability bars and likely scorelines. If the team API is unavailable, forecast controls remain disabled and a connection error is displayed. The bookmaker-odds endpoint is available from FastAPI, but has **not yet been added to this dashboard**.
 
-The available teams come from the configured backend data source. For the fictional local demonstration, see [Reproducible Demo](../docs/DEMO.md). The interface is intended for **local development**; public deployment, authentication, accessibility audits and end-to-end browser tests are future work.
+The available teams come from the configured backend data source. For the fictional local demonstration, see [Reproducible Demo](../docs/DEMO.md). The interface is intended for **local development**; public deployment, authentication and full accessibility audits are future work. Four Playwright Chromium end-to-end tests have passed locally against the isolated Docker demonstration; see [Browser Testing](../docs/BROWSER_TESTING.md).
 
 See the [system architecture](../docs/ARCHITECTURE.md) and [development roadmap](../docs/ROADMAP.md).
