@@ -66,6 +66,10 @@ Open http://127.0.0.1:3011 and confirm the team source is labeled **Synthetic de
 
 The isolated Docker environment passed both GitHub Actions integration checks and developer-local synthetic HTTP tests on 2026-11-24. This verifies local demo behavior, not production deployment.
 
+## API observability
+
+FastAPI now adds a generated `X-Request-ID` response header and emits structured JSON access logs containing only HTTP method, matched route template, status, request ID and duration. Request bodies, credentials and URL parameters are excluded. Optional **OpenTelemetry** console spans are disabled by default; no cloud collector is configured. See [API Observability](docs/OBSERVABILITY.md). This addition is pending pull-request CI verification and does not imply production monitoring.
+
 ## Browser end-to-end testing
 
 Four Playwright Chromium tests exercise the synthetic-data forecast, network failure handling, and dashboard navigation. All four passed locally on 2026-11-24 against the isolated Docker application. The dedicated GitHub Actions browser workflow must also pass before this feature is considered integrated. See [Browser Testing](docs/BROWSER_TESTING.md) for reproducible setup and its limitations.
