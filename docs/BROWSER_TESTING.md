@@ -10,11 +10,11 @@ First start the isolated Docker demonstration with Docker Desktop:
 docker compose -f compose.demo.yaml up -d --wait
 ```
 
-In the `frontend` directory, install the test runner and download its browser:
+The Playwright dependency is pinned in `frontend/package.json` and locked in `frontend/package-lock.json`. From the repository root, install it using the lockfile, download Chromium, and execute the suite:
 
 ```powershell
 cd frontend
-npm.cmd install --save-dev --save-exact @playwright/test@1.65.1
+npm.cmd ci
 npx.cmd playwright install chromium
 npx.cmd playwright test
 ```
@@ -29,7 +29,7 @@ If the tests fail, preserve their output and share the exact failure. Do not edi
 
 ## Pull request requirement
 
-The development branch initially contains the test specification and runner configuration only. Installing the pinned dev dependency updates **both** `frontend/package.json` and `frontend/package-lock.json`; commit both files together. GitHub Actions must then run `npm ci`, install Chromium with OS dependencies, start the isolated Compose stack, and execute Playwright successfully before the feature is approved.
+**Local verification (2026-11-24):** Four Chromium browser tests passed against the user's running Docker demonstration. The tests verify forecast rendering, correctly labeled synthetic data, failed team API behavior, failed forecast API behavior, and dashboard navigation. GitHub Actions must independently pass `npm ci`, Chromium installation, isolated Compose startup, and the Playwright suite on the final pull-request head before merging.
 
 The Docker stack must be shut down using `docker compose -f compose.demo.yaml down` when no longer needed. Never remove the PostgreSQL demo or historical volumes to address an unrelated browser failure.
 
