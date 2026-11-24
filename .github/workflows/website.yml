@@ -1,0 +1,45 @@
+name: Website Quality
+
+on:
+  pull_request:
+    paths:
+      - "docs/index.html"
+      - "docs/assets/**"
+      - "scripts/verify_pages_demo.py"
+      - ".github/workflows/website.yml"
+      - "src/football_intel/model.py"
+      - "src/football_intel/data.py"
+      - "data/synthetic_demo.csv"
+  push:
+    branches: [main]
+    paths:
+      - "docs/index.html"
+      - "docs/assets/**"
+      - "scripts/verify_pages_demo.py"
+      - ".github/workflows/website.yml"
+      - "src/football_intel/model.py"
+      - "src/football_intel/data.py"
+      - "data/synthetic_demo.csv"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  static-showcase:
+    name: Validate browser demo and Python model parity
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Check JavaScript syntax
+        run: |
+          node --check docs/assets/site.js
+          node --check docs/assets/forecast.mjs
+      - name: Verify fictional data and model equivalence
+        run: python scripts/verify_pages_demo.py
