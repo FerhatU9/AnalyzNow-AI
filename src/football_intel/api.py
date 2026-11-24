@@ -94,6 +94,44 @@ def get_teams() -> dict:
     except (ValueError, OSError) as exc:
         raise HTTPException(status_code=503, detail="Match data is unavailable") from exc
 
+@app.get("/v1/data-health")
+def get_data_health() -> dict:
+    """Check whether historical football data is up to date."""
+    today = date.today()
+
+    try:
+        matches = _load_configured_matches(today)
+        historical = [m for m in matches if m.date < today]
+
+        if not historical:
+            raise HTTPException(
+                status_code=503,
+                detail="No completed historical matches available",
+            )
+
+        latest = max(m.date for m in historical)
+        days_old = (today - latest).days
+
+        return {
+            "dataset_label": _dataset_label(),
+            "historical_matches": len(historical),
+            "latest_match": latest.isoformat(),
+            "days_old": days_old,
+            "stale_after_days": 90,
+            "is_stale": days_old > 90,
+        }
+
+    except psycopg.Error as exc:
+        raise HTTPException(
+            status_code=503,
+            detail="Football database is unavailable",
+        ) from exc
+
+    except (ValueError, OSError) as exc:
+        raise HTTPException(
+            status_code=503,
+            detail="Historical match data is unavailable",
+        ) from exc
 
 @app.post("/v1/forecast")
 def predict(payload: ForecastRequest) -> dict:

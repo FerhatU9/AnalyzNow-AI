@@ -35,6 +35,7 @@ The Python data access module requests only results with dates **strictly earlie
 - The Next.js frontend calls its local `/api/forecast` server route, which forwards requests to FastAPI.
 - `GET /v1/teams` supplies the selectable teams and dataset label to the browser via `/api/teams`. The bundled synthetic dataset is explicitly labeled as fictional.
 - `GET /health` reports process status; it is not a full database or provider availability check.
+- `GET /v1/data-health` reports historical match coverage and freshness. The Next.js `/api/data-health` route forwards this information to the `/data-health` dashboard. This is an on-demand check, not automated monitoring.
 
 ## Engineering safeguards
 

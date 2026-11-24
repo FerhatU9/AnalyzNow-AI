@@ -37,7 +37,7 @@ Refer to [System Architecture](docs/ARCHITECTURE.md), [Development Roadmap](docs
 
 ## Quick local demonstration
 
-For a no-credentials walkthrough using **fictional match data**, see [Reproducible Local Demo](docs/DEMO.md). It uses the included synthetic CSV and does **not** reproduce real-match evaluation or live bookmaker odds. The team selector and source-label changes passed automated CI. On 2026-11-24, the developer also verified a separate clean GitHub checkout in a fresh local folder: a synthetic forecast rendered in the browser, and the `/model-quality` page displayed the historical aggregates. See the [Public Release Checklist](docs/PUBLIC_RELEASE_CHECKLIST.md) for outstanding public-release gates.
+For a no-credentials walkthrough using **fictional match data**, see [Reproducible Local Demo](docs/DEMO.md). It uses the included synthetic CSV and does **not** reproduce real-match evaluation or live bookmaker odds. The team selector and source-label changes passed automated CI. On 2026-11-24, the developer also verified a separate clean GitHub checkout in a fresh local folder: a synthetic forecast rendered in the browser, and the `/model-quality` page displayed the historical aggregates. See the [Public Release Checklist](docs/PUBLIC_RELEASE_CHECKLIST.md) for outstanding public-release gates. The Data Health dashboard is available at `/data-health`. It displays the configured dataset, historical match count, latest match date, and a warning when data is more than 90 days old. The threshold is informational and does not measure predictive accuracy. No external monitoring service is required.
 
 ## Local development (Windows)
 
@@ -150,6 +150,7 @@ These indicators neither download current results nor modify forecast probabilit
 | `POST` | `/v1/forecast` | Generate a statistical forecast for teams and cutoff date |
 | `GET` | `/v1/teams` | List teams and the configured dataset label for the dashboard |
 | `GET` | `/v1/market-odds` | Retrieve current EPL bookmaker-implied market probabilities |
+| GET | `/v1/data-health` | Report historical match coverage, latest recorded match, and data freshness |
 
 Market odds access requires `ODDS_API_KEY` in the local `.env`. Run `python -m football_intel.market_odds` to inspect the provider response; this consumes provider API quota. The default-branch dashboard displays statistical forecasts. The live market dashboard is developed separately in draft PR #5; it is **not merged** into `main`.
 

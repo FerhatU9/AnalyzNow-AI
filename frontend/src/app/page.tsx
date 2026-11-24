@@ -163,6 +163,14 @@ export default function Home() {
   >
     View Model Quality
   </Link>
+
+<Link
+  href="/data-health"
+  className="inline-flex rounded-lg border border-emerald-500/40 px-4 py-2 text-sm font-semibold text-emerald-300 hover:bg-emerald-500/10"
+>
+  View Data Health
+</Link>
+
   </nav>
 
         </header>
