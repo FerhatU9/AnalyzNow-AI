@@ -4,7 +4,7 @@ The Model Quality page turns locally measured historical forecasting results int
 
 ## Data sources
 
-For the complete download-to-export procedure, including strict historical cutoffs, evaluation commands and comparison with the committed dashboard metrics, see [Historical Model Reproducibility](MODEL_REPRODUCIBILITY.md). That end-to-end reproduction has not yet been independently completed.
+For the complete download-to-export procedure, including strict historical cutoffs, evaluation commands and comparison with the committed dashboard metrics, see [Historical Model Reproducibility](MODEL_REPRODUCIBILITY.md). The 2024/25 and 2025/26 evaluations were independently rerun using newly downloaded, hash-verified local snapshots on 24 November 2026; both reproduced their previously reported aggregate scores. This does not independently verify every upstream match result or future forecasting skill.
 
 Generate the reports using the existing research scripts:
 
