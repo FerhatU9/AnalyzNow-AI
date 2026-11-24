@@ -2,7 +2,7 @@
 
 A responsive, interactive showcase for the football intelligence and forecasting project.
 
-**Planned address:** https://ferhatu9.github.io/AnalyzNow-AI/
+**Live interactive showcase (verified 2026-11-24):** https://ferhatu9.github.io/AnalyzNow-AI/
 
 This website is deliberately similar in scope to the ScoutMonitor AI GitHub Pages showcase. It provides a working fictional-team explorer and independent-Poisson forecast calculation in the visitor's browser, while the full FastAPI + PostgreSQL + Next.js application remains a separate project component.
 
