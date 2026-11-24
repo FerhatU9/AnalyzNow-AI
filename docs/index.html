@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#080f19">
+  <meta name="description" content="AnalyzNow AI — explore a transparent football forecasting demonstration with six fictional teams and a locally calculated Poisson model.">
+  <meta property="og:title" content="AnalyzNow AI | Football intelligence showcase">
+  <meta property="og:description" content="Interactive football modelling showcase with transparent fictional match data and browser-calculated Poisson probabilities.">
+  <title>AnalyzNow AI — Football intelligence showcase</title>
+  <link rel="stylesheet" href="./assets/site.css">
+  <script type="module" src="./assets/site.js"></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to main content</a>
+<header class="topbar">
+  <a class="wordmark" href="#overview" aria-label="AnalyzNow AI — home"><span class="brand-icon" aria-hidden="true">A<span>↗</span></span> AnalyzNow <em>AI</em></a>
+  <nav class="navigation" aria-label="Main navigation">
+    <a href="#forecast">Forecast lab</a>
+    <a href="#data">Data integrity</a>
+    <a href="#engineering">Engineering</a>
+  </nav>
+  <a class="github-link" href="https://github.com/FerhatU9/AnalyzNow-AI" target="_blank" rel="noopener noreferrer">GitHub source <span aria-hidden="true">↗</span></a>
+</header>
+<main id="main">
+  <section class="hero container" id="overview">
+    <div class="hero-copy">
+      <p class="eyebrow"><span class="pulse"></span> FOOTBALL INTELLIGENCE / ENGINEERING SHOWCASE</p>
+      <h1>Behind every match,<br><span>a deeper story.</span></h1>
+      <p class="lead">Explore the mathematics behind football forecasting. Compare fictional teams, inspect probability distributions, and see how historical evidence shapes a research model.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#forecast">Try the forecast lab <span aria-hidden="true">↗</span></a>
+        <a class="btn btn-secondary" href="#engineering">Explore the architecture</a>
+      </div>
+      <p class="hero-disclosure"><span class="info-mark" aria-hidden="true">i</span> This website uses fictional results. The forecast runs in your browser — no live teams, bookmaker odds, or hosted Python backend.</p>
+    </div>
+    <div class="hero-visual" aria-hidden="true">
+      <div class="visual-heading"><span>FORECAST INTELLIGENCE / 01</span><span class="green-tag">SYNTHETIC DATA</span></div>
+      <div class="pitch">
+        <div class="pitch-line center"></div><div class="pitch-circle"></div><div class="pitch-box left"></div><div class="pitch-box right"></div>
+        <div class="flow-line one"></div><div class="flow-line two"></div>
+        <div class="pitch-dot d1"></div><div class="pitch-dot d2"></div><div class="pitch-dot d3"></div><div class="pitch-dot d4"></div>
+        <div class="pitch-dot dim d5"></div><div class="pitch-dot dim d6"></div><div class="pitch-dot dim d7"></div>
+        <div class="pitch-insight"><small>RESEARCH BASELINE</small><strong>Poisson × Football</strong><span>Evidence before prediction.</span></div>
+      </div>
+      <div class="visual-footer"><div><span>MODEL</span><strong>INDEPENDENT POISSON</strong></div><div><span>DATASET</span><strong>FICTIONAL / 2025</strong></div></div>
+    </div>
+  </section>
+  <section class="stat-strip container" aria-label="Showcase overview">
+    <div><strong>06</strong><span>FICTIONAL TEAMS</span></div>
+    <div><strong id="match-count">100</strong><span>SYNTHETIC MATCHES</span></div>
+    <div><strong>01</strong><span>EXPLAINABLE BASELINE</span></div>
+    <p>Transparency first.<br>No invented real-world claims.</p>
+  </section>
+  <section class="section container" id="forecast">
+    <div class="section-title"><div><p class="section-index">01 / INTERACTIVE FORECAST LAB</p><h2>Explore the <span>probabilities.</span></h2><p>Choose two fictional clubs and calculate a research forecast based on the published demonstration dataset.</p></div><span class="section-label">BROWSER-ONLY DEMO</span></div>
+    <div class="lab-grid">
+      <form id="forecast-form" class="panel controls">
+        <div class="panel-head"><span class="panel-kicker">MATCH SETUP</span><span class="status-chip">LOCAL CALCULATION</span></div>
+        <div class="field-pair">
+          <label class="field"><span>HOME TEAM</span><select id="home-team" required aria-label="Home Team"></select></label>
+          <label class="field"><span>AWAY TEAM</span><select id="away-team" required aria-label="Away Team"></select></label>
+        </div>
+        <label class="field"><span>HISTORICAL CUTOFF DATE</span><input id="cutoff" type="date" value="2025-07-19" min="2025-01-02" max="2025-07-19" required><small>Only fictional matches before this date count toward the model.</small></label>
+        <button type="submit" class="btn btn-primary calculate" id="forecast-button" disabled>Calculate forecast <span aria-hidden="true">↗</span></button>
+        <p role="status" id="load-status" class="subtle">Loading fictional match records…</p>
+        <p role="alert" id="forecast-error" hidden></p>
+        <div class="safety-note"><strong>Demonstration only.</strong> The displayed numbers are generated from artificial match results. They are not real-world forecasts or betting advice.</div>
+      </form>
+      <div class="panel results">
+        <div class="panel-head"><span class="panel-kicker">MODEL OUTPUT</span><span class="status-chip neutral">RESEARCH / v0.1</span></div>
+        <div id="result-placeholder" class="result-placeholder"><span class="placeholder-symbol">%</span><strong>Ready for the numbers?</strong><p>Configure two demo teams to reveal a probability breakdown.</p></div>
+        <div id="result-content" hidden>
+          <div class="match-heading"><span id="match-title">—</span><small id="match-meta"></small></div>
+          <div class="goals"><div><span>HOME EXPECTED GOALS</span><strong id="home-goals">—</strong></div><div><span>AWAY EXPECTED GOALS</span><strong id="away-goals">—</strong></div></div>
+          <h3>Match outcome probabilities</h3>
+          <div class="outcome" data-outcome="home_win"><div><span>Home win</span><strong>—</strong></div><i><b></b></i></div>
+          <div class="outcome" data-outcome="draw"><div><span>Draw</span><strong>—</strong></div><i><b></b></i></div>
+          <div class="outcome" data-outcome="away_win"><div><span>Away win</span><strong>—</strong></div><i><b></b></i></div>
+          <div class="secondary-markets"><div><span>OVER 2.5 GOALS</span><strong id="over-goals">—</strong></div><div><span>BOTH TEAMS SCORE</span><strong id="btts">—</strong></div></div>
+          <div class="scoreline-head"><span>FIVE MOST LIKELY SCORELINES</span><small>ARTIFICIAL DATA</small></div>
+          <div id="scorelines" class="scorelines"></div>
+          <p id="forecast-provenance" class="provenance"></p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="section integrity" id="data">
+    <div class="container">
+      <div class="section-title"><div><p class="section-index">02 / DATA TRANSPARENCY</p><h2>Know what you're <span>looking at.</span></h2><p>A good analytical system makes its assumptions and limitations visible.</p></div></div>
+      <div class="card-grid">
+        <article class="info-card"><span class="card-num">01 / PROVENANCE</span><h3>Fictional by design.</h3><p>Six Demo clubs and artificial match results are included in the public repository. No restricted real-match data or bookmaker feeds are used.</p></article>
+        <article class="info-card"><span class="card-num">02 / TIME AWARENESS</span><h3>No future leakage.</h3><p>The historical cutoff is applied before fitting the model. Only matches strictly before the selected date contribute to the calculation.</p></article>
+        <article class="info-card"><span class="card-num">03 / MODEL HONESTY</span><h3>Limits stay visible.</h3><p>The independent-Poisson method does not incorporate injuries, expected goals, tactics, or correlations between scorelines. This website does not claim verified accuracy on current fixtures.</p></article>
+      </div>
+      <p class="dataset-line" id="dataset-line">DATASET / loading fictional records</p>
+    </div>
+  </section>
+  <section class="section container" id="engineering">
+    <div class="section-title"><div><p class="section-index">03 / ENGINEERING</p><h2>More than a <span>dashboard.</span></h2><p>The complete open-source project also includes a separately running Python application and reproducible tests.</p></div></div>
+    <div class="architecture"><div><span>MODELLING</span><strong>Python · Poisson · Elo</strong><small>Research forecasting and walk-forward evaluation</small></div><span class="architecture-arrow">→</span><div><span>BACKEND</span><strong>FastAPI · PostgreSQL</strong><small>API services and data integrity</small></div><span class="architecture-arrow">→</span><div><span>INTERFACE</span><strong>Next.js · TypeScript</strong><small>Interactive application and data quality dashboards</small></div></div>
+    <div class="tech-footer"><div><strong>Built to be inspected.</strong><p>Docker · Playwright · GitHub Actions · OpenTelemetry. The full-stack service is separate from this self-contained GitHub Pages showcase.</p></div><a class="btn btn-secondary" href="https://github.com/FerhatU9/AnalyzNow-AI" target="_blank" rel="noopener noreferrer">Explore the GitHub repository ↗</a></div>
+  </section>
+</main>
+<footer><div class="container"><span>ANALYZNOW AI / ENGINEERING SHOWCASE</span><span>Fictional football data · Research only · <a href="https://github.com/FerhatU9/AnalyzNow-AI">Open source</a></span></div></footer>
+</body>
+</html>

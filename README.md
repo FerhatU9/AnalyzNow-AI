@@ -4,6 +4,8 @@
 
 AnalyzNow AI is a football research application that turns historical match results into probabilistic forecasts and supports separate retrieval of bookmaker-implied market probabilities, without blending them into the statistical forecasts. The project combines a Python forecasting engine, PostgreSQL, FastAPI and a Next.js dashboard.
 
+**GitHub Pages showcase:** The [interactive fictional-team forecasting website](https://ferhatu9.github.io/AnalyzNow-AI/) is designed to run entirely in your browser, independent of Python, FastAPI, PostgreSQL, or external services. **Publishing is pending GitHub Pages activation and live verification.** See [Website documentation](docs/website.md) for publishing and scope.
+
 **Status:** Working local research application under active development. Forecasting, database integration, the web dashboard, model diagnostics and Data Health have been exercised. The repository is intended as a **source-code engineering portfolio**, not a public forecasting service; no live application is deployed. Forecasts are not validated for betting or commercial decision-making.
 
 ## What the application does
