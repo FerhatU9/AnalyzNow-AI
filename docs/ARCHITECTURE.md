@@ -43,6 +43,10 @@ The Python data access module requests only results with dates **strictly earlie
 - `GET /health` reports process status; it is not a full database or provider availability check.
 - `GET /v1/data-health` reports historical match coverage and freshness. The Next.js `/api/data-health` route forwards this information to the `/data-health` dashboard. This is an on-demand check, not automated monitoring.
 
+## Request diagnostics (under CI verification)
+
+FastAPI middleware generates a unique `X-Request-ID` on each response and writes a JSON access log with route template, HTTP method, status code and request duration. Request bodies, full URL paths, query strings, client-supplied IDs and credentials are never included in that event. Optional OpenTelemetry spans are exported only to the developer console when explicitly enabled; no remote collector is configured. See [API Observability](OBSERVABILITY.md).
+
 ## Engineering safeguards
 
 - Forecasts use only data dated before their cutoff, avoiding same-day/future result leakage.
