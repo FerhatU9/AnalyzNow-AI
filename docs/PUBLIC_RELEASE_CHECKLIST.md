@@ -19,6 +19,11 @@ The goal of this checklist is a credible **public source-code portfolio**, not a
 
 ## Required before public visibility
 
+- [x] README includes two authentic application screenshots via merged PR #11; the GitHub Actions Python/frontend/demo and all three security jobs passed at PR #11 head `873388e`.
+- [x] Checked that root `.env` and `frontend/.env.local` were absent at those paths on all 12 current branch tips. A targeted review of 14 recent commits' changed text found no recognizable token or private-key markers. Earlier reachable-history and Gitleaks reviews are documented separately; neither proves arbitrary historical secrets are absent.
+- [x] **Owner declaration received 2026-11-24:** The owner answered **No** to ever having committed, pushed, or shared real API keys, passwords, access tokens, or private datasets in this GitHub repository (including later-removed material). This is a self-report, not proof from a full historical audit.
+- [ ] Review any older/unreachable history, PR discussions, Actions artifacts and non-repository exposures as appropriate; a passing automated scan and an owner declaration cannot conclusively establish their contents.
+
 - [x] Independently run the synthetic browser walkthrough from a separate fresh checkout. On 2026-11-24, `AnalyzNow_Review` used FastAPI port 9021 and Next.js port 3021; browser screenshots showed the correct synthetic forecast (Demo City vs Demo East: expected goals 1.60/1.00 and 51.3%/25.0%/23.7% outcome probabilities) and the Model Quality page. This was a separate checkout on the same Windows computer, not an unrelated machine.
 - [x] Keep the **market-dashboard UI** in draft PR #5, separate from the forecasting-focused public-source release. The existing backend odds route is for local development only and must not be exposed unauthenticated on the public internet. **Making the whole GitHub repository public would also expose branch/PR history, including PR #5; these must be checked for secrets and sensitive material even if not merged into `main`.**
 - [ ] Before merging/deploying PR #5 separately, test successful data, empty fixtures, missing API key and provider failure without publishing proprietary bookmaker quotes.
@@ -35,7 +40,7 @@ The goal of this checklist is a credible **public source-code portfolio**, not a
 - [x] Validate a clean checkout in an **isolated local folder** without relying on the existing PostgreSQL volume or API provider credentials. Both services ran against the synthetic CSV after a fresh Python/npm dependency installation; the independently run `verify_demo.py` script passed. A second physical machine has **not** been tested.
 - [x] PRs #8 and #9 are merged into `main`; this release-documentation review reconciles their feature descriptions and testing evidence. Verify the final README after the documentation PR is merged.
 - [x] PR #9 was reviewed and merged into `main` as `9622f8b` after all six CI/security checks passed and local browser checks confirmed the freshness warning. PR #5 remains an unrelated draft outside this initial release feature scope.
-- [ ] Review GitHub repository description, pinned topics, license, issue/reporting expectations and include an authentic application screenshot or short demonstration from a tested build. Screenshots exist in developer review, but none has yet been added to the repository.
+- [ ] Review GitHub repository description, pinned topics, license and issue/reporting expectations. Authentic forecast-freshness and Data Health screenshots have **been committed and merged** via PR #11, with their links included in the README; repository metadata review remains incomplete.
 
 ## Product limitations to disclose
 
@@ -47,7 +52,7 @@ The goal of this checklist is a credible **public source-code portfolio**, not a
 
 ## Readiness decision
 
-**Current decision: private; public portfolio approval pending the unchecked gates above.**
+**Current decision: private; screenshot and application integration complete, but public portfolio approval remains pending the credential/history and repository-presentation gates above.**
 
 Latest verified PR #9 head `9208e70` (2026-11-24): all six CI/security jobs passed, including Python tests, frontend lint/build, full-stack synthetic demo, Python/npm audits and Gitleaks. PR #9 merged as `9622f8b`. Confirm CI for the subsequent release-documentation pull request separately.
 
