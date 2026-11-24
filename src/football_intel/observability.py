@@ -62,7 +62,7 @@ class RequestObservabilityMiddleware(BaseHTTPMiddleware):
                     status = response.status_code
                     return response
                 except Exception:
-                    span.record_exception(Exception("Unhandled API exception"))
+                    span.set_attribute("error.type", "unhandled_exception")
                     raise
                 finally:
                     route = safe_route(request)
