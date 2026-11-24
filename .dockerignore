@@ -1,0 +1,26 @@
+# Keep local credentials and datasets out of all build contexts.
+.git
+.github
+.env
+.env.*
+!.env.example
+**/.env
+**/.env.*
+**/node_modules
+**/.next
+**/.venv
+.venv
+__pycache__
+**/__pycache__
+.pytest_cache
+**/.pytest_cache
+outputs
+*.dump
+*.backup
+*.sqlite3
+*.db
+data/openfootball
+data/*.csv
+!data/synthetic_demo.csv
+*.log
+*.patch
